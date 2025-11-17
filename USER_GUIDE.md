@@ -128,10 +128,6 @@ If you see version 9.0 or higher, you're ready to proceed! ✅
 2. Extract to a folder (e.g., `C:\FlowManager` or `~/FlowManager`)
 3. Open terminal and navigate to the extracted folder
 
-```bash
-cd "C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager"
-```
-
 #### **Option B: Clone from Git**
 
 If the project is in a Git repository:
@@ -251,8 +247,8 @@ dotnet run
 **Expected output:**
 ```
 info: Microsoft.Hosting.Lifetime[14]
-      Now listening on: https://localhost:5001
-      Now listening on: http://localhost:5000
+      Now listening on: https://localhost:port number
+      Now listening on: http://localhost:port number
       Application started. Press Ctrl+C to shut down.
 ```
 
@@ -261,10 +257,10 @@ info: Microsoft.Hosting.Lifetime[14]
 ### Step 8: Open in Browser
 
 1. **Open your web browser**
-2. **Navigate to:** https://localhost:5001
+2. **Navigate to:** https://localhost:portnumber (indicated in the terminal)
 3. **Accept the self-signed certificate warning** (it's safe - this is local development)
 
-**You should see the FlowManager interface!** 🎉
+**You should see the FlowManager interface!** 
 
 ---
 
@@ -278,12 +274,12 @@ info: Microsoft.Hosting.Lifetime[14]
    - Spam and Router Flow
    - Flow 52d51e69 Fixed
 
-If you see these, your installation is working! ✅
+If you see these, your installation is working! 
 
 #### **Test 2: Run a Simple Flow**
 
-1. Click **"Run"** on any flow
-2. Enter some test input (e.g., "Hello, how are you?")
+1. Click **"Run"** on aspam classifier flow
+2. Enter some test input (e.g., "I got an email saying that I won the lottery, I just need to click it")
 3. Click **"Execute Flow"**
 4. You should see AI-generated results
 
@@ -433,61 +429,6 @@ FlowManager/
 ```
 
 ---
-
-### Environment Variables (Optional)
-
-For **production** or **shared development**, use environment variables instead of hardcoding API keys:
-
-**Set environment variable:**
-
-**Windows (PowerShell):**
-```powershell
-$env:OPENAI_API_KEY="sk-your-key-here"
-dotnet run
-```
-
-**macOS/Linux (Bash):**
-```bash
-export OPENAI_API_KEY="sk-your-key-here"
-dotnet run
-```
-
-**Update `Program.cs` to read from environment:**
-```csharp
-var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-    ?? builder.Configuration["KnowledgeBase:OpenAIApiKey"];
-```
-
----
-
-### Docker Installation (Advanced)
-
-If you prefer Docker:
-
-**Create `Dockerfile`:**
-```dockerfile
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-WORKDIR /src
-COPY . .
-RUN dotnet restore
-RUN dotnet build -c Release -o /app/build
-
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
-WORKDIR /app
-COPY --from=build /app/build .
-EXPOSE 5001
-ENTRYPOINT ["dotnet", "FlowManager.Web.dll"]
-```
-
-**Build and run:**
-```bash
-docker build -t flowmanager .
-docker run -p 5001:5001 -e OPENAI_API_KEY="sk-..." flowmanager
-```
-
----
-
-### What's Next?
 
 ✅ **Installation complete!**
 
@@ -1696,30 +1637,4 @@ Here's a **real-world example** combining everything you've learned:
 
 ---
 
-## Summary
 
-Congratulations! You now know how to:
-
-✅ Create flows with nodes and edges
-✅ Implement conditional branching
-✅ Use parallel execution for performance
-✅ Build complex department routing systems
-✅ Apply best practices for production flows
-
-### Next Steps
-
-1. **Experiment:** Create your own flows
-2. **Review:** Study the provided example flows in `Data/Flows/`
-3. **Extend:** Learn to create custom node types (see Developer Guide)
-4. **Deploy:** Set up production infrastructure (see Deployment Guide)
-
----
-
-## Need Help?
-
-- **Documentation:** Check the Architecture Overview and Developer Guide
-- **Issues:** Report bugs on GitHub
-- **Community:** Join our Discord server
-- **Support:** Email support@flowmanager.com
-
-**Happy Flow Building! 🚀**
