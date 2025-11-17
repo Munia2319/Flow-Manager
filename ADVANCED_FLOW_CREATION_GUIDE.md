@@ -1677,13 +1677,6 @@ You now have a complete understanding of:
 ✅ **JSON Structure**: Nodes, edges, conditions
 ✅ **Real-World Example**: Complete code review flow from scratch
 
-**Next Steps:**
-
-1. **Practice**: Modify the code review flow
-2. **Experiment**: Try different system prompts
-3. **Build**: Create your own custom flow
-4. **Share**: Document your flows for team reuse
-
 ---
 
 **Questions? Issues?**
@@ -1693,4 +1686,4 @@ Refer to:
 - API documentation - Node type reference
 - Example flows in `Data/Flows/`
 
-Happy Flow Building! 🚀
+
