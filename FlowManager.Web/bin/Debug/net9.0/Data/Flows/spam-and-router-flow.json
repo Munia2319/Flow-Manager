@@ -1,0 +1,179 @@
+{
+  "id": "spam-and-router-flow",
+  "name": "Spam Detection + Department Router Flow",
+  "description": "Parallel execution: Classifies spam while routing to multiple departments, then combines all results",
+  "tenantId": "default",
+  "nodes": [
+    {
+      "id": "input1",
+      "type": "Input",
+      "config": {
+        "text": "{{userInput}}"
+      },
+      "condition": null
+    },
+    {
+      "id": "spam_classifier",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.2,
+        "systemPrompt": "You are a spam detection specialist. Analyze the message and classify it as SPAM or NOT_SPAM. Consider: promotional content, phishing attempts, suspicious links, urgent requests for money/credentials, poor grammar typical of scams. Return ONLY a JSON object: {\"classification\": \"SPAM\" or \"NOT_SPAM\", \"confidence\": 0-100, \"reason\": \"brief explanation\"}. Example: {\"classification\": \"SPAM\", \"confidence\": 95, \"reason\": \"Contains suspicious link and urgent payment request\"}"
+      },
+      "condition": null
+    },
+    {
+      "id": "department_orchestrator",
+      "type": "Orchestrator",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.3,
+        "systemPrompt": "You are a department router. Analyze the user query and route to appropriate departments. Multiple departments can be selected. Categories: 'tech' = technical issues (VPN, email, software, hardware, IT problems). 'billing' = payment issues (charges, invoices, refunds, subscriptions, pricing). 'sales' = product inquiries, demos, purchasing, new features. 'support' = account help, how-to questions, general assistance. Return ONLY valid JSON: {\"Action\": \"DepartmentHandoff\", \"Pipeline\": [{\"Target\": \"tech\"}]} or {\"Action\": \"DepartmentHandoff\", \"Pipeline\": [{\"Target\": \"tech\"}, {\"Target\": \"billing\"}]}. CRITICAL: If query mentions multiple topics, include ALL relevant departments."
+      },
+      "condition": null
+    },
+    {
+      "id": "tech_dept",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.7,
+        "systemPrompt": "You are a technical support specialist. Provide detailed troubleshooting steps for technical issues. Be specific with solutions. Start your response with '🔧 Technical Support:'"
+      },
+      "condition": null
+    },
+    {
+      "id": "billing_dept",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.7,
+        "systemPrompt": "You are a billing support specialist. Help with payment issues, refunds, and invoice questions. Be clear about next steps. Start your response with '💳 Billing Support:'"
+      },
+      "condition": null
+    },
+    {
+      "id": "sales_dept",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.8,
+        "systemPrompt": "You are a sales specialist. Help with product information, pricing, demos, and purchasing decisions. Be enthusiastic and helpful. Start your response with '💼 Sales:'"
+      },
+      "condition": null
+    },
+    {
+      "id": "support_dept",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.7,
+        "systemPrompt": "You are a general support specialist. Provide helpful guidance for account and general questions. Be friendly and clear. Start your response with '🤝 Support:'"
+      },
+      "condition": null
+    },
+    {
+      "id": "final_formatter",
+      "type": "Formatter",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "You are a response formatter. You receive: 1) Spam classification analysis, 2) Responses from various departments. Create ONE comprehensive response with these sections: [SECURITY NOTICE] Show spam analysis first if classification is SPAM, add a warning. If NOT_SPAM, just note 'Message verified as legitimate'. Then show department responses under their original headers (Technical Support, Billing Support, Sales, Support). If message is SPAM with high confidence (>80%), add a prominent warning at the top. Combine all information into a clear, organized final response. ANd "
+      },
+      "condition": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "input1",
+      "to": "spam_classifier",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "input1",
+      "to": "department_orchestrator",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "department_orchestrator",
+      "to": "tech_dept",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{department_orchestrator.targets}} contains 'tech'"
+    },
+    {
+      "from": "department_orchestrator",
+      "to": "billing_dept",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{department_orchestrator.targets}} contains 'billing'"
+    },
+    {
+      "from": "department_orchestrator",
+      "to": "sales_dept",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{department_orchestrator.targets}} contains 'sales'"
+    },
+    {
+      "from": "department_orchestrator",
+      "to": "support_dept",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{department_orchestrator.targets}} contains 'support'"
+    },
+    {
+      "from": "department_orchestrator",
+      "to": "final_formatter",
+      "fromOutput": "action",
+      "toInput": "routing_info",
+      "condition": null
+    },
+    {
+      "from": "spam_classifier",
+      "to": "final_formatter",
+      "fromOutput": "output",
+      "toInput": "spam_analysis",
+      "condition": null
+    },
+    {
+      "from": "tech_dept",
+      "to": "final_formatter",
+      "fromOutput": "output",
+      "toInput": "tech_response",
+      "condition": null
+    },
+    {
+      "from": "billing_dept",
+      "to": "final_formatter",
+      "fromOutput": "output",
+      "toInput": "billing_response",
+      "condition": null
+    },
+    {
+      "from": "sales_dept",
+      "to": "final_formatter",
+      "fromOutput": "output",
+      "toInput": "sales_response",
+      "condition": null
+    },
+    {
+      "from": "support_dept",
+      "to": "final_formatter",
+      "fromOutput": "output",
+      "toInput": "support_response",
+      "condition": null
+    }
+  ],
+  "createdAt": "2025-11-14T00:00:00Z",
+  "updatedAt": "2025-11-14T00:00:00Z"
+}

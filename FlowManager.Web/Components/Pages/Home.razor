@@ -1,0 +1,163 @@
+﻿@page "/"
+@inject IJSRuntime JS
+
+<PageTitle>Flow Manager - Home</PageTitle>
+
+<div class="container mt-4">
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <i class="bi bi-diagram-3"></i> Flow Manager
+        </h1>
+        <p class="lead text-muted">Your AI assistant for workplace queries</p>
+        <p class="text-muted">From safety procedures to product lookups, get instant intelligent answers</p>
+    </div>
+
+    <!-- Quick Action Cards -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+            <a href="/flows" class="text-decoration-none">
+                <div class="card h-100 shadow-sm action-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-diagram-3 display-4 mb-3" style="color: #667eea;"></i>
+                        <h4 class="card-title">My Flows</h4>
+                        <p class="text-muted mb-0">Manage workflows</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <a href="/knowledgebase" class="text-decoration-none">
+                <div class="card h-100 shadow-sm action-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-journal-text display-4 mb-3 text-success"></i>
+                        <h4 class="card-title">Knowledge Base</h4>
+                        <p class="text-muted mb-2">5 documents indexed</p>
+                        <span class="badge bg-success">Active</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <a href="/flows" class="text-decoration-none">
+                <div class="card h-100 shadow-sm action-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-plus-circle display-4 mb-3 text-primary"></i>
+                        <h4 class="card-title">Create Flow</h4>
+                        <p class="text-muted mb-0">Build new workflow</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- What Can You Do Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h3 class="card-title mb-4">
+                <i class="bi bi-stars"></i> What Can I Help You With?
+            </h3>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-shield-check text-success fs-3 me-3"></i>
+                        <div>
+                            <h6 class="mb-1">Safety Procedures & Policies</h6>
+                            <p class="text-muted small mb-0">Ask about emergency response, safety protocols, and company policies</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-tools text-warning fs-3 me-3"></i>
+                        <div>
+                            <h6 class="mb-1">Equipment & Maintenance</h6>
+                            <p class="text-muted small mb-0">Get help with equipment procedures and maintenance guidelines</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-search text-primary fs-3 me-3"></i>
+                        <div>
+                            <h6 class="mb-1">Information Lookup</h6>
+                            <p class="text-muted small mb-0">Search internal documents or web for the latest information</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-image text-info fs-3 me-3"></i>
+                        <div>
+                            <h6 class="mb-1">Visual Analysis</h6>
+                            <p class="text-muted small mb-0">Analyze images, diagrams, and visual content</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works - Simplified -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h3 class="card-title mb-4">
+                <i class="bi bi-lightbulb"></i> How It Works
+            </h3>
+            <div class="row text-center">
+                <div class="col-md-6 mb-3">
+                    <div class="mb-3">
+                        <span class="badge bg-primary rounded-circle p-3" style="font-size: 24px; width: 60px; height: 60px; display: inline-flex; align-items: center; justify-content: center;">1</span>
+                    </div>
+                    <h5>Create or Use a Flow</h5>
+                    <p class="text-muted">Design custom workflows or use pre-built templates with AI-powered nodes</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="mb-3">
+                        <span class="badge bg-primary rounded-circle p-3" style="font-size: 24px; width: 60px; height: 60px; display: inline-flex; align-items: center; justify-content: center;">2</span>
+                    </div>
+                    <h5>Get Intelligent Answers</h5>
+                    <p class="text-muted">AI routes your query to the right department and delivers smart responses</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center mb-5">
+        <h3 class="mb-4">Ready to Get Started?</h3>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="/flows" class="btn btn-primary btn-lg">
+                <i class="bi bi-diagram-3"></i> View My Flows
+            </a>
+            <a href="/knowledgebase" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-journal-text"></i> Browse Knowledge Base
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .action-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+        border-color: #667eea;
+    }
+
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+    }
+
+    .list-group-item:first-child {
+        border-top: none;
+    }
+</style>

@@ -1,0 +1,231 @@
+COMPANY SAFETY MANUAL
+FORKLIFT OPERATIONS GUIDE
+Version 2.1 - Effective January 2025
+
+========================================
+TABLE OF CONTENTS
+========================================
+1. Introduction
+2. Operator Requirements
+3. Pre-Operation Inspection
+4. Safe Operating Procedures
+5. Load Handling
+6. Emergency Procedures
+7. Maintenance Requirements
+
+========================================
+1. INTRODUCTION
+========================================
+
+This manual provides essential safety guidelines and operating procedures for all forklift operations at our facility. All operators must read, understand, and comply with these procedures before operating any forklift equipment.
+
+Failure to follow these procedures may result in:
+- Serious injury or death
+- Equipment damage
+- Termination of employment
+- Legal liability
+
+========================================
+2. OPERATOR REQUIREMENTS
+========================================
+
+All forklift operators must:
+
+- Be at least 18 years of age
+- Complete certified forklift training program
+- Pass written and practical examinations
+- Receive annual refresher training
+- Undergo evaluation every 3 years
+- Report any medical conditions affecting operation
+
+CERTIFICATION RENEWAL:
+- Initial certification valid for 3 years
+- Annual refresher training required
+- Re-certification required after any accident
+- Immediate suspension for safety violations
+
+========================================
+3. PRE-OPERATION INSPECTION
+========================================
+
+DAILY INSPECTION CHECKLIST:
+Operators must complete this checklist before each shift:
+
+VISUAL INSPECTION:
+□ Check for fluid leaks (oil, coolant, hydraulic fluid)
+□ Inspect tires for wear, damage, or proper inflation
+□ Check forks for cracks, bends, or wear
+□ Verify all safety decals are visible
+□ Inspect overhead guard for damage
+□ Check seat belt for wear and proper function
+
+OPERATIONAL CHECKS:
+□ Test horn - must be audible from 50 feet
+□ Check all lights (headlights, taillights, warning lights)
+□ Test steering responsiveness
+□ Verify brakes engage smoothly
+□ Test hydraulic lift controls
+□ Check backup alarm functionality
+□ Inspect fire extinguisher (charged and accessible)
+
+FUEL/BATTERY CHECK:
+□ Verify adequate fuel level (minimum 1/4 tank)
+□ Check battery charge (electric forklifts)
+□ Inspect battery connections and cables
+
+REPORT IMMEDIATELY:
+Any defects or malfunctions must be reported to supervision immediately. Tag defective equipment "OUT OF SERVICE" and do not operate until repaired.
+
+========================================
+4. SAFE OPERATING PROCEDURES
+========================================
+
+BEFORE MOVING:
+1. Adjust seat for comfort and visibility
+2. Fasten seat belt securely
+3. Check all mirrors
+4. Ensure load is stable and centered
+5. Sound horn before moving
+
+SPEED LIMITS:
+- Maximum speed: 5 MPH in warehouse
+- Maximum speed: 10 MPH in open yard areas
+- Reduce speed on wet surfaces
+- Slow down at intersections and blind corners
+
+VISIBILITY RULES:
+- Always maintain clear line of sight
+- Drive in reverse if load blocks forward view
+- Use spotter for blind areas
+- Never allow riders on forklift
+
+PEDESTRIAN SAFETY:
+- Yield right-of-way to all pedestrians
+- Sound horn at intersections
+- Maintain 10-foot distance from pedestrians
+- Make eye contact before proceeding
+- Stop completely if pedestrian is in path
+
+SLOPE OPERATION:
+- Maximum slope: 10 degrees
+- Loaded forks must point uphill
+- Unloaded forks must point downhill
+- Never turn on slopes
+- Reduce speed on inclines
+
+========================================
+5. LOAD HANDLING
+========================================
+
+MAXIMUM LOAD CAPACITY:
+- Check forklift capacity plate
+- Never exceed rated capacity
+- Account for load center distance
+- Reduce capacity on uneven surfaces
+
+PROPER LOADING TECHNIQUE:
+1. Approach load squarely
+2. Insert forks fully under load (minimum 2/3 depth)
+3. Space forks as wide as possible
+4. Tilt mast backward slightly
+5. Lift load 4-6 inches off ground
+6. Check for stability before moving
+7. Keep load low during transport (6 inches clearance)
+
+STACKING PROCEDURES:
+- Verify floor capacity before stacking
+- Maximum stack height: 15 feet
+- Ensure pallets are in good condition
+- Stack heaviest items on bottom
+- Align loads properly
+- Use proper blocking and spacing
+
+UNSAFE LOADS - DO NOT LIFT:
+- Loads with broken or damaged pallets
+- Loads extending beyond fork width
+- Loads with unsecured items
+- Loads exceeding weight capacity
+- Unbalanced or shifting loads
+
+========================================
+6. EMERGENCY PROCEDURES
+========================================
+
+IN CASE OF TIP-OVER:
+DO NOT JUMP OUT!
+1. Hold steering wheel firmly
+2. Brace feet against floor
+3. Lean away from impact point
+4. Stay in operator cage
+
+FIRE EMERGENCY:
+1. Turn off forklift immediately
+2. Evacuate area
+3. Use fire extinguisher only if fire is small
+4. Pull fire alarm
+5. Call 911
+6. Notify supervision
+
+CHEMICAL SPILL:
+1. Stop operations immediately
+2. Evacuate area if unsafe
+3. Report spill to supervisor
+4. Follow MSDS procedures
+5. Use proper cleanup equipment
+6. Wear required PPE
+
+ACCIDENT REPORTING:
+All accidents, no matter how minor, must be reported immediately to:
+- Direct supervisor
+- Safety officer
+- HR department
+
+Failure to report accidents may result in disciplinary action.
+
+========================================
+7. MAINTENANCE REQUIREMENTS
+========================================
+
+OPERATOR RESPONSIBILITIES:
+- Complete daily pre-operation inspection
+- Report all defects immediately
+- Keep forklift clean and organized
+- Check fluid levels weekly
+- Inspect forks for damage monthly
+
+SCHEDULED MAINTENANCE:
+- 250 hours: Oil change and filter replacement
+- 500 hours: Full inspection and lubrication
+- 1000 hours: Major service and brake inspection
+- Annual: Complete safety certification
+
+BATTERY MAINTENANCE (Electric Forklifts):
+- Check water levels weekly
+- Charge battery when reaches 20%
+- Allow battery to cool before charging
+- Clean terminals monthly
+- Report charging issues immediately
+
+========================================
+ACKNOWLEDGMENT
+========================================
+
+I have read and understand the Forklift Safety Manual. I agree to comply with all safety procedures and requirements outlined in this document.
+
+Operator Name: _____________________
+Signature: _____________________
+Date: _____________________
+Supervisor: _____________________
+
+========================================
+EMERGENCY CONTACTS
+========================================
+
+Facility Safety Officer: Extension 5555
+Maintenance Department: Extension 5100
+Emergency Services: 911
+Company Safety Hotline: 1-800-SAFETY-1
+
+Last Updated: January 2025
+Next Review Date: January 2026
+Document Control Number: SF-001-2025

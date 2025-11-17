@@ -1,0 +1,133 @@
+{
+  "id": "flow-5f18dd12",
+  "name": "New Flow",
+  "description": "",
+  "tenantId": "default",
+  "nodes": [
+    {
+      "id": "input1",
+      "type": "Input",
+      "config": {
+        "text": "Your question here"
+      },
+      "condition": null
+    },
+    {
+      "id": "orchestrator1",
+      "type": "Orchestrator",
+      "config": {
+        "apiKey": "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"
+      },
+      "condition": null
+    },
+    {
+      "id": "search1",
+      "type": "SearchDepartment",
+      "config": {
+        "apiKey": "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"
+      },
+      "condition": "{{orchestrator1.targets}} contains \u0027Search\u0027"
+    },
+    {
+      "id": "data1",
+      "type": "DataDepartment",
+      "config": {
+        "apiKey": "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"
+      },
+      "condition": "{{orchestrator1.targets}} contains \u0027Data\u0027"
+    },
+    {
+      "id": "function1",
+      "type": "FunctionDepartment",
+      "config": {
+        "apiKey": "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"
+      },
+      "condition": "{{orchestrator1.targets}} contains \u0027Function\u0027"
+    },
+    {
+      "id": "image1",
+      "type": "ImageDepartment",
+      "config": {
+        "apiKey": "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",
+        "imageUrl": ""
+      },
+      "condition": "{{orchestrator1.targets}} contains \u0027Image\u0027"
+    },
+    {
+      "id": "formatter1",
+      "type": "Formatter",
+      "config": {
+        "apiKey": "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"
+      },
+      "condition": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "input1",
+      "to": "orchestrator1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "input1",
+      "to": "search1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "input1",
+      "to": "data1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "input1",
+      "to": "function1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "input1",
+      "to": "image1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "search1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "search",
+      "condition": null
+    },
+    {
+      "from": "data1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "data",
+      "condition": null
+    },
+    {
+      "from": "function1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "function",
+      "condition": null
+    },
+    {
+      "from": "image1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "image",
+      "condition": null
+    }
+  ],
+  "createdAt": "2025-11-14T12:15:55.3005724Z",
+  "updatedAt": "2025-11-14T12:15:55.3005726Z",
+  "lastModified": "2025-11-14T12:15:55.300574Z"
+}

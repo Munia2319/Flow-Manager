@@ -1,0 +1,134 @@
+{
+  "id": "flow-52d51e69",
+  "name": "Latest",
+  "description": "",
+  "tenantId": "default",
+  "nodes": [
+    {
+      "id": "input1",
+      "type": "Input",
+      "config": {
+        "text": "Your question here"
+      },
+      "condition": null
+    },
+    {
+      "id": "classifier1",
+      "type": "Orchestrator",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "You are a query classifier. Analyze the user's message and identify ALL relevant categories. A query can belong to multiple categories.\n\n  Categories:\n  - tech (VPN, email, software, hardware, technical issues)\n  - billing (payments, charges, invoices, refunds, pricing)\n  - general (general info, feedback, non-specific questions)\n\n  IMPORTANT: You must return a JSON object with this structure:\n  {\n    \"Action\": \"DepartmentHandoff\",\n    \"Pipeline\": [\n      {\"Target\": \"tech\"},\n      {\"Target\": \"billing\"}\n    ]\n  }\n\n  Add ALL relevant categories to the Pipeline array. For example:\n  - If only tech: Pipeline: [{\"Target\": \"tech\"}]\n  - If tech and billing: Pipeline: [{\"Target\": \"tech\"}, {\"Target\": \"billing\"}]\n  - If all three: Pipeline: [{\"Target\": \"tech\"}, {\"Target\": \"billing\"}, {\"Target\": \"general\"}]",
+        "model": "gpt-4o-mini",
+        "temperature": 0.3,
+        "maxTokens": 2000
+      },
+      "condition": null
+    },
+    {
+      "id": "tech1",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "You are a technical support specialist. Address ONLY the technical issues in the user's query (VPN, email, software, hardware). Provide clear troubleshooting steps. Start with \"Technical Support:\"",
+        "model": "gpt-4o-mini",
+        "temperature": 0.7,
+        "maxTokens": 2000
+      },
+      "condition": null
+    },
+    {
+      "id": "billing1",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "You are a billing support specialist. Address ONLY the billing/payment issues in the user's query. Be clear about next steps for billing problems. Start with \"Billing Support:\"",
+        "model": "gpt-4o-mini",
+        "temperature": 0.7,
+        "maxTokens": 2000
+      },
+      "condition": null
+    },
+    {
+      "id": "general1",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "You are a general information assistant. Address ONLY the general information requests in the user's query. Be helpful and friendly. Start with \"General Information:\"",
+        "model": "gpt-4o-mini",
+        "temperature": 0.7,
+        "maxTokens": 2000
+      },
+      "condition": null
+    },
+    {
+      "id": "Formatter",
+      "type": "Formatter",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "You are a response formatter. Combine outputs from different support departments into ONE clear, organized response. Use section headers to distinguish between departments. Format: If tech output exists, show under '**Technical Support:**'. If billing output exists, show under '**Billing Support:**'. If general output exists, show under '**General Information:**'. Remove any redundancy and present a cohesive answer."
+      },
+      "condition": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "input1",
+      "to": "classifier1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "classifier1",
+      "to": "tech1",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{classifier1.targets}} contains 'tech'"
+    },
+    {
+      "from": "classifier1",
+      "to": "billing1",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{classifier1.targets}} contains 'billing'"
+    },
+    {
+      "from": "classifier1",
+      "to": "general1",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{classifier1.targets}} contains 'general'"
+    },
+    {
+      "from": "classifier1",
+      "to": "Formatter",
+      "fromOutput": "action",
+      "toInput": "routing_info",
+      "condition": null
+    },
+    {
+      "from": "tech1",
+      "to": "Formatter",
+      "fromOutput": "output",
+      "toInput": "tech",
+      "condition": null
+    },
+    {
+      "from": "billing1",
+      "to": "Formatter",
+      "fromOutput": "output",
+      "toInput": "billing",
+      "condition": null
+    },
+    {
+      "from": "general1",
+      "to": "Formatter",
+      "fromOutput": "output",
+      "toInput": "general",
+      "condition": null
+    }
+  ],
+  "createdAt": "2025-11-13T13:55:50.7250151Z",
+  "updatedAt": "2025-11-14T09:30:00.0000000Z",
+  "lastModified": "2025-11-14T09:30:00.0000000Z"
+}

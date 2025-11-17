@@ -1,0 +1,36 @@
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\bin\Debug\net9.0\FlowManager.Core.deps.json
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\bin\Debug\net9.0\FlowManager.Core.dll
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\bin\Debug\net9.0\FlowManager.Core.pdb
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.csproj.AssemblyReference.cache
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.AssemblyInfoInputs.cache
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.AssemblyInfo.cs
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.csproj.CoreCompileInputs.cache
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.dll
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\obj\Debug\net9.0\refint\FlowManager.Core.dll
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.pdb
+C:\Users\mushf\Desktop\FlowManager\FlowManager.Core\obj\Debug\net9.0\ref\FlowManager.Core.dll
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\bin\Debug\net9.0\FlowManager.Core.deps.json
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\bin\Debug\net9.0\FlowManager.Core.dll
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\bin\Debug\net9.0\FlowManager.Core.pdb
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.csproj.AssemblyReference.cache
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.AssemblyInfoInputs.cache
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.AssemblyInfo.cs
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.csproj.CoreCompileInputs.cache
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.dll
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\obj\Debug\net9.0\refint\FlowManager.Core.dll
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.pdb
+C:\Users\mushf\Desktop\Latest version\FlowManager\FlowManager.Core\obj\Debug\net9.0\ref\FlowManager.Core.dll
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.csproj.AssemblyReference.cache
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.AssemblyInfoInputs.cache
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.AssemblyInfo.cs
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.csproj.CoreCompileInputs.cache
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.dll
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\obj\Debug\net9.0\refint\FlowManager.Core.dll
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\obj\Debug\net9.0\FlowManager.Core.pdb
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\bin\Debug\net9.0\FlowManager.Core.deps.json
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\bin\Debug\net9.0\FlowManager.Core.dll
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\bin\Debug\net9.0\FlowManager.Core.pdb
+C:\Users\mushf\Desktop\LAST SATBLE VERSION\FlowManager\FlowManager.Core\obj\Debug\net9.0\ref\FlowManager.Core.dll

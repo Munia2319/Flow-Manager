@@ -1,0 +1,923 @@
+WAREHOUSE OPERATIONS
+Standard Operating Procedures
+Document ID: SOP-WH-001
+Version 3.1 - January 2025
+
+========================================
+PURPOSE
+========================================
+
+This document establishes standard procedures for all warehouse operations including receiving, storage, picking, packing, and shipping. Following these procedures ensures:
+
+- Accurate inventory management
+- Safe working environment
+- Efficient order fulfillment
+- Customer satisfaction
+- Regulatory compliance
+
+========================================
+SCOPE
+========================================
+
+This procedure applies to:
+- All warehouse personnel
+- Material handling equipment operators
+- Inventory control staff
+- Shipping and receiving clerks
+- Quality control inspectors
+- Supervisors and managers
+
+========================================
+GENERAL WAREHOUSE RULES
+========================================
+
+SAFETY REQUIREMENTS:
+
+REQUIRED PPE:
+- Steel-toed safety boots (always)
+- High-visibility safety vest (always)
+- Safety glasses in designated areas
+- Hard hat in loading dock areas
+- Hearing protection (if noise over 85 dB)
+- Cut-resistant gloves (when handling sharp materials)
+
+PROHIBITED ITEMS:
+- Open-toed shoes or sandals
+- Loose clothing that could catch
+- Jewelry (rings, necklaces, bracelets)
+- Headphones or earbuds
+- Personal electronic devices during operation
+- Food or beverages in work areas
+
+HOUSEKEEPING STANDARDS:
+- Keep aisles clear at all times
+- Minimum 4-foot aisle width
+- No obstructed emergency exits
+- Spills cleaned immediately
+- Trash removed daily
+- Tools returned after use
+- Pallets stacked properly
+
+TRAFFIC FLOW:
+- Designated pedestrian walkways
+- Forklift lanes marked
+- Speed limit: 5 MPH
+- Yield to pedestrians always
+- Sound horn at intersections
+- No running in warehouse
+- Stay within marked areas
+
+========================================
+RECEIVING PROCEDURES
+========================================
+
+RECEIVING HOURS:
+Monday - Friday: 7:00 AM - 3:00 PM
+Closed for lunch: 12:00 PM - 1:00 PM
+No weekend receiving without pre-approval
+
+APPOINTMENT SYSTEM:
+All deliveries require appointment:
+1. Carrier calls 24 hours in advance
+2. Receiving schedules appointment
+3. Confirmation sent to carrier
+4. Dock door assigned
+5. 30-minute unloading window
+
+WALK-INS:
+Non-appointment deliveries:
+- Accepted only if capacity available
+- May wait up to 2 hours
+- Priority to scheduled deliveries
+
+RECEIVING PROCESS:
+
+STEP 1: CARRIER CHECK-IN
+1. Driver reports to receiving office
+2. Present delivery documents:
+   - Bill of Lading (BOL)
+   - Packing slip
+   - Purchase order number
+3. Driver signs in visitor log
+4. Assigned to dock door
+5. Safety briefing given
+
+STEP 2: TRAILER INSPECTION
+Before unloading, inspect:
+□ Trailer condition (no damage)
+□ Seal intact (record seal number)
+□ No signs of tampering
+□ Temperature (if refrigerated)
+□ Cleanliness (no contamination)
+□ No pest infestation
+
+IF ISSUES FOUND:
+- Photograph damage
+- Note on BOL
+- Notify supervisor
+- May refuse delivery
+- Document reason
+
+STEP 3: UNLOADING
+1. Park forklift safely
+2. Chock trailer wheels
+3. Lower dock plate
+4. Turn on dock lights
+5. Unload systematically (front to back)
+6. Place goods in receiving staging area
+7. Keep products organized by PO
+8. Do not block aisles
+
+SAFETY DURING UNLOADING:
+- Never enter trailer without communication
+- Use spotter if visibility limited
+- Watch for shifting loads
+- Maintain 3-point contact on trailer
+- Never walk under raised forks
+- Wear hard hat in trailer
+
+STEP 4: COUNT AND INSPECT
+1. Count all cartons/pallets
+2. Verify quantity matches BOL
+3. Inspect for visible damage:
+   - Crushed boxes
+   - Water damage
+   - Torn packaging
+   - Leaking containers
+4. Photograph any damage
+5. Note discrepancies on BOL
+
+DISCREPANCY HANDLING:
+OVERAGE: Accept and note on BOL
+SHORTAGE: Note exact shortage, driver must sign
+DAMAGE: Photograph, segregate, note on BOL, claim process
+
+STEP 5: DOCUMENTATION
+1. Sign and date BOL
+2. Note any exceptions
+3. Provide driver with signed copy
+4. Scan documents to system
+5. Enter receipt in WMS (Warehouse Management System)
+6. Create quality inspection ticket if needed
+
+RECEIVING QUALITY INSPECTION:
+
+INSPECT RANDOM SAMPLES:
+- 10% of cartons for orders under 50 units
+- 5% of cartons for orders over 50 units
+- 100% for high-value items
+- All hazardous materials
+
+INSPECTION CRITERIA:
+□ Correct product (match PO)
+□ Correct quantity
+□ Acceptable condition
+□ Proper labeling
+□ Expiration dates acceptable
+□ Packaging intact
+□ No substitutions without approval
+
+IF QUALITY FAIL:
+1. Quarantine product (red tag)
+2. Photograph issues
+3. Notify purchasing
+4. Complete non-conformance report
+5. Await disposition (return, accept, or scrap)
+
+STEP 6: PUT AWAY
+1. Generate put-away task in WMS
+2. Verify location assignment
+3. Transport to location
+4. Scan location barcode
+5. Confirm put-away in system
+6. Update inventory
+7. Maximum put-away time: 2 hours from receipt
+
+========================================
+STORAGE PROCEDURES
+========================================
+
+LOCATION SYSTEM:
+
+FORMAT: AA-BB-CC-DD
+- AA: Aisle (01-30)
+- BB: Bay (01-50)
+- CC: Level (01-06)
+- DD: Position (01-04)
+
+Example: 12-25-03-02
+Aisle 12, Bay 25, Level 3, Position 2
+
+STORAGE ZONES:
+
+ZONE A - Fast Movers:
+- Near shipping area
+- High-turnover items
+- Easy access locations
+- Ground level preferred
+
+ZONE B - Medium Movers:
+- Mid-warehouse
+- Moderate turnover
+- Standard racking
+- Levels 1-4
+
+ZONE C - Slow Movers:
+- Back of warehouse
+- Low turnover
+- Upper levels acceptable
+- Long-term storage
+
+ZONE D - Bulk Storage:
+- Floor-stacked pallets
+- Same-SKU pallets
+- Deep lane storage
+- FIFO management
+
+ZONE E - Hazmat:
+- Segregated area
+- Caged and locked
+- Fire suppression
+- Spill containment
+- Limited access
+
+RACKING RULES:
+
+LOAD LIMITS:
+- Check load capacity placard
+- Never exceed rated capacity
+- Heaviest items on lower levels
+- Lighter items on upper levels
+
+STACKING HEIGHTS:
+- Maximum 6 pallets high (standard racking)
+- Maximum 20 feet floor stacking
+- Leave 18 inches clearance from sprinklers
+- Maintain structural integrity
+
+PALLET STANDARDS:
+- Use 40" × 48" GMA pallets
+- Four-way entry preferred
+- Good condition only
+- No broken boards
+- Maximum weight: 2,500 lbs per pallet
+
+PRODUCT ORIENTATION:
+- Labels facing outward
+- Arrows pointing up
+- Fragile labels visible
+- FIFO dates visible
+- Lot codes accessible
+
+INVENTORY ACCURACY:
+
+CYCLE COUNTING:
+- A Items: Weekly (high value, 20% of SKUs)
+- B Items: Monthly (medium value, 30% of SKUs)
+- C Items: Quarterly (low value, 50% of SKUs)
+
+CYCLE COUNT PROCEDURE:
+1. Generate count sheet from WMS
+2. Print blank count form
+3. Physically count product
+4. Record actual quantity
+5. Enter into WMS
+6. Investigate discrepancies over 2%
+7. Adjust inventory with supervisor approval
+
+INVENTORY ADJUSTMENTS:
+Require:
+- Reason code
+- Supervisor authorization
+- Supporting documentation
+- Root cause analysis if over $500
+
+LOCATION AUDITS:
+- Random location checks daily
+- Full location audit annually
+- Document findings
+- Correct errors immediately
+- Track accuracy metrics
+
+Target Accuracy: 99.5% or better
+
+========================================
+PICKING PROCEDURES
+========================================
+
+ORDER PICKING METHODS:
+
+DISCRETE PICKING (Default):
+- One order at a time
+- Pick complete order
+- Used for large orders
+- Highest accuracy
+
+BATCH PICKING:
+- Multiple orders simultaneously
+- Same SKU, different orders
+- Increases efficiency
+- Requires sorting after pick
+
+WAVE PICKING:
+- Scheduled pick waves
+- All orders in time window
+- Consolidated picking
+- Used during peak times
+
+ZONE PICKING:
+- Each picker assigned zone
+- Orders passed between zones
+- Reduces travel time
+- Requires coordination
+
+PICKING PROCESS:
+
+STEP 1: RECEIVE PICK TICKET
+1. Log into RF scanner
+2. Receive pick assignment
+3. Review order requirements:
+   - Priority level
+   - Special instructions
+   - Shipping method
+   - Customer requirements
+4. Gather materials (cart, boxes, tape)
+
+STEP 2: TRAVEL TO LOCATION
+1. Follow efficient route
+2. Scan location barcode
+3. Verify location on screen
+4. Visual confirmation of product
+
+STEP 3: PICK PRODUCT
+1. Verify correct item:
+   - Check SKU number
+   - Match product description
+   - Verify lot/serial if required
+2. Count accurately
+3. Inspect for damage
+4. Scan product barcode
+5. Confirm quantity picked
+6. Remove from location
+
+STEP 4: QUALITY CHECK
+For each pick:
+□ Correct item number
+□ Correct quantity
+□ Good condition
+□ No damage or defects
+□ Within expiration date
+□ Proper packaging
+
+STEP 5: COMPLETE PICK
+1. Place in tote/cart
+2. Keep order separate
+3. Include pick ticket
+4. Complete all line items
+5. Scan "complete" in system
+6. Transport to packing area
+
+PICKING RULES:
+
+FIFO (First In, First Out):
+- Pick oldest stock first
+- Check production/expiration dates
+- Rotate stock properly
+- Exception: LIFO if specified
+
+ACCURACY STANDARDS:
+- 99.8% picking accuracy required
+- Double-check on high-value items
+- Supervisory verify over $1,000
+- Zero tolerance for wrong product
+
+SHORT PICKS:
+If item not in location:
+1. Check adjacent locations
+2. Verify WMS shows inventory
+3. Search immediate area
+4. If not found, create shortage ticket
+5. Notify supervisor
+6. System generates recount task
+
+PARTIAL PICKS:
+If insufficient quantity:
+1. Pick available quantity
+2. Note shortage in system
+3. Create backorder
+4. Notify customer service
+5. Suggest substitutions if available
+
+========================================
+PACKING PROCEDURES
+========================================
+
+PACKING STATIONS:
+
+REQUIRED SUPPLIES:
+- Corrugated boxes (various sizes)
+- Bubble wrap
+- Packing peanuts
+- Air pillows
+- Tape (3-inch reinforced)
+- Tape gun
+- Box cutters
+- Shipping labels
+- Packing slips
+- Scales
+- Dimensional scanner
+
+PACKING PROCESS:
+
+STEP 1: VERIFY ORDER
+1. Receive picked order at station
+2. Scan order barcode
+3. Review packing instructions
+4. Check for special requirements:
+   - Gift wrap
+   - Special labeling
+   - Hazmat requirements
+   - Insurance
+
+STEP 2: SELECT PACKAGING
+1. Choose appropriate box size
+2. Minimize void space
+3. Consider product fragility
+4. Check weight limits
+5. Use manufacturer packaging when possible
+
+BOX SIZING GUIDELINES:
+- Small: Under 5 lbs, under 12" any dimension
+- Medium: 5-15 lbs, under 18" any dimension
+- Large: 15-40 lbs, under 24" any dimension
+- Extra Large: Over 40 lbs, oversized
+
+STEP 3: PACK ITEMS
+1. Line box with cushioning if needed
+2. Place heavier items on bottom
+3. Wrap fragile items individually
+4. Fill void space with packing material
+5. Items should not shift when shaken
+6. Do not overfill box
+
+PACKING STANDARDS:
+- 2-inch cushioning on all sides (fragile)
+- No items touching box sides (fragile)
+- Proper orientation (arrows up)
+- Crush-proof arrangement
+- Secure all moving parts
+
+STEP 4: VERIFY CONTENTS
+1. Compare to pick ticket
+2. Count each item
+3. Check for damage
+4. Verify all items present
+5. Quality inspection
+
+FINAL CHECK:
+□ All items in box
+□ No damage
+□ Properly cushioned
+□ Nothing missing
+□ Special requirements met
+
+STEP 5: SEAL AND LABEL
+1. Close box flaps
+2. Apply tape:
+   - H-taping method preferred
+   - Tape all seams
+   - Reinforce bottom
+3. Weigh package
+4. Measure dimensions
+5. Print shipping label
+6. Apply label to top of box
+7. Apply packing slip
+8. Apply special labels if needed:
+   - Fragile
+   - This Side Up
+   - Do Not Stack
+   - Hazmat placards
+
+STEP 6: SCAN AND STAGE
+1. Scan shipping label
+2. Confirm ship method
+3. Place in staging area by carrier:
+   - UPS zone
+   - FedEx zone
+   - LTL freight zone
+   - Will call area
+4. Update system status to "packed"
+
+PACKAGING GUIDELINES:
+
+FRAGILE ITEMS:
+- Double-box if highly fragile
+- 3-inch cushioning minimum
+- Mark "FRAGILE" on all sides
+- Include handling instructions
+- Photograph high-value items
+
+LIQUIDS:
+- Verify cap is tight
+- Seal in plastic bag
+- Absorbent material inside
+- Waterproof inner container
+- Mark "LIQUID" on box
+
+HAZARDOUS MATERIALS:
+- Follow DOT regulations
+- Proper packaging required
+- Hazmat certification needed
+- Special labeling mandatory
+- MSDS sheet included
+- Limited quantity markings
+
+INTERNATIONAL SHIPMENTS:
+- Commercial invoice (3 copies)
+- Customs forms completed
+- Country-specific requirements
+- Declared value accurate
+- Harmonized codes
+- No prohibited items
+
+========================================
+SHIPPING PROCEDURES
+========================================
+
+CARRIER PICKUP SCHEDULE:
+
+DAILY PICKUPS:
+- UPS: 4:00 PM
+- FedEx: 4:30 PM
+- USPS: 3:00 PM
+
+LTL FREIGHT:
+- Schedule in advance
+- 4-hour pickup window
+- Appointment required
+- Liftgate if needed
+
+CUT-OFF TIMES:
+Orders must be packed by:
+- Ground shipping: 2:00 PM
+- Next-day air: 12:00 PM
+- International: 11:00 AM
+- Same day: 10:00 AM
+
+MANIFEST PROCESS:
+
+END-OF-DAY PROCEDURE:
+1. Close shipments in carrier system
+2. Generate manifest report
+3. Print manifest for each carrier
+4. Verify package count matches manifest
+5. Sign and date manifest
+6. Provide to carrier driver
+7. File copy in shipping office
+8. Email copy to accounting
+
+FREIGHT SHIPMENTS:
+
+LTL (Less Than Truckload):
+
+PREPARING FREIGHT:
+1. Palletize properly
+2. Stretch wrap securely (min 3 layers)
+3. Create BOL:
+   - Origin and destination
+   - Number of pallets
+   - Total weight
+   - Freight class
+   - Special requirements
+4. Attach freight labels to each pallet
+5. Place BOL in protective pouch
+6. Stage at dock door
+
+FREIGHT CLASSES:
+- Class 50: Dense, heavy items
+- Class 100: Medium density
+- Class 150: Light, bulky
+- Class 250: Very light, large
+
+Verify freight class for accurate billing
+
+INSPECTION BEFORE LOADING:
+□ Pallet in good condition
+□ Load stable and secure
+□ Proper wrapping
+□ Labels visible
+□ Correct weight documented
+□ Freight class verified
+□ Special handling noted
+
+CARRIER DOCUMENTATION:
+- Get driver signature on BOL
+- Provide driver with all copies
+- Retain warehouse copy
+- Photograph loaded truck
+- Note truck/trailer number
+- Record seal number if used
+
+SHIPPING CLAIMS:
+
+DAMAGED IN TRANSIT:
+Customer must:
+1. Report within 48 hours
+2. Provide photographs
+3. Keep all packaging
+4. File claim with carrier
+5. We provide documentation
+
+LOST SHIPMENTS:
+1. Confirm tracking shows lost
+2. File trace request
+3. Wait 5 business days
+4. File claim if not found
+5. Reship if covered
+
+WRONG ADDRESS:
+1. Request address correction
+2. Additional fees may apply
+3. Update customer address
+4. Notify customer service
+
+========================================
+RETURNS PROCESSING
+========================================
+
+RETURN AUTHORIZATION (RMA):
+
+REQUIRED INFORMATION:
+- RMA number from customer service
+- Original order number
+- Reason for return
+- Return shipping tracking
+- Expected arrival date
+
+RECEIVING RETURNS:
+
+STEP 1: CHECK IN
+1. Verify RMA number
+2. Inspect package condition
+3. Photograph exterior
+4. Note any damage
+
+STEP 2: OPEN AND INSPECT
+1. Verify contents match RMA
+2. Check product condition:
+   - New/unused
+   - Like new
+   - Used
+   - Damaged/defective
+3. Photograph items
+4. Complete condition report
+
+STEP 3: DISPOSITION
+Based on condition:
+
+NEW/UNUSED:
+- Return to stock
+- Full credit to customer
+
+LIKE NEW:
+- Minor inspection/cleaning
+- Return to stock
+- Full credit
+
+USED:
+- Evaluate resalability
+- Possible restocking fee
+- Partial credit
+
+DAMAGED/DEFECTIVE:
+- Quarantine
+- Send to manufacturer
+- Full credit if under warranty
+
+STEP 4: PROCESS RETURN
+1. Update WMS
+2. Issue credit memo
+3. Notify customer service
+4. Add to inventory or quarantine
+5. Close RMA
+
+========================================
+INVENTORY MANAGEMENT
+========================================
+
+STOCK ROTATION:
+
+FIFO ENFORCEMENT:
+- Oldest stock picked first
+- Date all incoming stock
+- Regular rotation checks
+- Monthly expiration audits
+
+EXPIRATION DATE POLICY:
+- Quarantine 90 days before expiration
+- Discount 60 days before
+- Dispose 30 days before
+- Never ship expired product
+
+DEAD STOCK:
+Review quarterly:
+- No movement in 12 months
+- Consider liquidation
+- Clearance pricing
+- Donation if appropriate
+
+MINIMUM/MAXIMUM LEVELS:
+
+REORDER POINTS:
+Set based on:
+- Average daily usage
+- Lead time
+- Safety stock
+- Seasonal variations
+
+REPLENISHMENT:
+- Automatic for A items
+- Manual review for B/C items
+- Emergency orders as needed
+- Communicate delays immediately
+
+PHYSICAL INVENTORY:
+
+ANNUAL FULL COUNT:
+Scheduled annually:
+1. Close warehouse operations
+2. Assign count areas
+3. Blind count (no reference)
+4. Two-person verification
+5. Enter counts in system
+6. Investigate variances
+7. Adjust inventory
+8. Root cause analysis
+
+========================================
+SAFETY PROCEDURES
+========================================
+
+EMERGENCY PROCEDURES:
+
+FIRE:
+1. Activate alarm
+2. Evacuate immediately
+3. Call 911
+4. Meet at assembly point
+5. Account for all personnel
+
+INJURY:
+1. Secure area
+2. Call for first aid (Extension 5222)
+3. Call 911 if serious
+4. Do not move injured person
+5. Complete incident report
+
+SPILL:
+1. Contain if safe
+2. Use spill kit
+3. Notify supervisor
+4. Follow MSDS procedures
+5. Dispose properly
+
+HAZMAT STORAGE:
+
+SEGREGATION REQUIREMENTS:
+- Acids separate from bases
+- Oxidizers separate from flammables
+- Compressed gases secured
+- Proper ventilation
+- Spill containment
+- Fire suppression
+- Emergency equipment accessible
+
+FORKLIFT SAFETY:
+
+OPERATOR REQUIREMENTS:
+- Valid certification
+- Daily inspection completed
+- Seat belt worn
+- Speed limits observed
+- Horn used at intersections
+- No riders allowed
+
+ERGONOMICS:
+
+LIFTING TECHNIQUES:
+- Bend knees, not back
+- Keep load close
+- No twisting while lifting
+- Team lift over 50 lbs
+- Mechanical assistance when possible
+
+REPETITIVE MOTION:
+- Vary tasks
+- Take breaks
+- Stretch regularly
+- Report discomfort early
+
+========================================
+QUALITY ASSURANCE
+========================================
+
+PERFORMANCE METRICS:
+
+ACCURACY:
+- Receiving accuracy: 99.5%
+- Picking accuracy: 99.8%
+- Inventory accuracy: 99.5%
+
+PRODUCTIVITY:
+- Lines picked per hour: 75
+- Orders packed per hour: 20
+- Shipments per day: 500
+
+TIMELINESS:
+- Orders shipped same day: 95%
+- Next-day orders by cutoff: 100%
+- Put-away within 2 hours: 100%
+
+QUALITY AUDITS:
+
+DAILY:
+- Random order audits (10%)
+- Packing quality checks
+- Shipping label accuracy
+
+WEEKLY:
+- Location audits
+- Safety inspections
+- Cleanliness review
+
+MONTHLY:
+- Full process review
+- Metrics analysis
+- Improvement initiatives
+
+========================================
+CONTINUOUS IMPROVEMENT
+========================================
+
+LEAN PRACTICES:
+- 5S workplace organization
+- Waste elimination
+- Process optimization
+- Standard work
+- Visual management
+
+EMPLOYEE FEEDBACK:
+- Suggestion program
+- Team meetings
+- Process improvement ideas
+- Recognition for improvements
+
+TRAINING:
+- New hire orientation (2 weeks)
+- Cross-training program
+- Safety refreshers (quarterly)
+- Equipment certifications
+- Leadership development
+
+========================================
+DOCUMENT CONTROL
+========================================
+
+Document ID: SOP-WH-001
+Version: 3.1
+Effective Date: January 2025
+Next Review: July 2025
+
+Prepared by: Warehouse Manager
+Reviewed by: Operations Director
+Approved by: VP of Operations
+
+Distribution: All Warehouse Staff
+
+REVISION HISTORY:
+v3.1 (Jan 2025): Updated metrics, added quality procedures
+v3.0 (Jul 2024): Major revision, new WMS integration
+v2.5 (Jan 2024): Added returns processing section
+
+========================================
+ACKNOWLEDGMENT
+========================================
+
+I have read and understand the Warehouse Operations SOP.
+
+Employee Name: _____________________
+Signature: _____________________
+Date: _____________________
+Supervisor: _____________________
+
+========================================
+CONTACT INFORMATION
+========================================
+
+Warehouse Office: Extension 5200
+Receiving: Extension 5201
+Shipping: Extension 5202
+Inventory Control: Extension 5203
+Warehouse Manager: Extension 5204
+Safety Officer: Extension 5555
+Emergency: 911 or Extension 5911

@@ -1,0 +1,714 @@
+EQUIPMENT MAINTENANCE PROCEDURES
+Standard Operating Procedure
+Document ID: SOP-MAINT-001
+Version 2.0 - January 2025
+
+========================================
+PURPOSE
+========================================
+
+This document outlines the preventive maintenance procedures for all production and material handling equipment at our facility. Proper maintenance ensures:
+
+- Equipment reliability and uptime
+- Worker safety
+- Cost efficiency
+- Compliance with regulations
+- Extended equipment life
+
+========================================
+SCOPE
+========================================
+
+This procedure applies to:
+- All production equipment
+- Material handling equipment (forklifts, pallet jacks)
+- HVAC systems
+- Electrical systems
+- Building infrastructure
+- Safety equipment
+
+========================================
+RESPONSIBILITIES
+========================================
+
+MAINTENANCE DEPARTMENT:
+- Perform scheduled maintenance
+- Maintain equipment records
+- Track spare parts inventory
+- Respond to breakdown calls
+- Train operators on basic maintenance
+
+OPERATORS:
+- Perform daily inspections
+- Report equipment issues immediately
+- Complete basic maintenance tasks
+- Follow lockout/tagout procedures
+- Keep equipment clean
+
+SUPERVISORS:
+- Ensure maintenance schedules followed
+- Approve maintenance requests
+- Monitor equipment performance
+- Budget for maintenance needs
+
+========================================
+MAINTENANCE CLASSIFICATIONS
+========================================
+
+PREVENTIVE MAINTENANCE (PM):
+Scheduled maintenance to prevent failures
+- Daily operator checks
+- Weekly inspections
+- Monthly servicing
+- Quarterly comprehensive reviews
+- Annual certifications
+
+CORRECTIVE MAINTENANCE:
+Repairs after equipment failure
+- Emergency repairs
+- Breakdown response
+- Component replacement
+
+PREDICTIVE MAINTENANCE:
+Monitoring to predict failures
+- Vibration analysis
+- Thermal imaging
+- Oil analysis
+- Performance trending
+
+ROUTINE MAINTENANCE:
+Regular upkeep tasks
+- Cleaning
+- Lubrication
+- Adjustments
+- Minor repairs
+
+========================================
+GENERAL MAINTENANCE PROCEDURES
+========================================
+
+LOCKOUT/TAGOUT (LOTO):
+REQUIRED before maintenance on any energized equipment
+
+PROCEDURE:
+1. Notify affected employees
+2. Shut down equipment properly
+3. Isolate all energy sources:
+   - Electrical
+   - Hydraulic
+   - Pneumatic
+   - Mechanical
+   - Thermal
+4. Apply lockout devices
+5. Attach personal danger tag
+6. Verify zero energy state
+7. Perform maintenance
+8. Remove locks only after completion
+9. Verify safe operation before restart
+
+LOTO REQUIREMENTS:
+- Personal locks for each worker
+- "Danger - Do Not Operate" tags
+- Group lockout for multiple workers
+- Annual LOTO training required
+
+WORK ORDER SYSTEM:
+All maintenance must have work order
+
+CREATING WORK ORDER:
+1. Log into maintenance portal
+2. Select equipment from dropdown
+3. Describe issue in detail
+4. Select priority level:
+   - Emergency (safety hazard, complete shutdown)
+   - Urgent (affecting production)
+   - Routine (scheduled PM)
+   - Low (cosmetic, convenience)
+5. Attach photos if applicable
+6. Submit for approval
+
+WORK ORDER TRACKING:
+- Open: Awaiting assignment
+- In Progress: Technician working
+- Parts Ordered: Waiting for materials
+- On Hold: Pending approval/resources
+- Completed: Work finished
+- Closed: Verified and documented
+
+========================================
+DAILY OPERATOR INSPECTIONS
+========================================
+
+TO BE COMPLETED BEFORE EACH SHIFT
+
+FORKLIFT INSPECTION:
+
+VISUAL CHECK:
+□ Check for leaks (oil, coolant, hydraulic)
+□ Inspect tires for damage or wear
+□ Check forks for cracks or bends
+□ Verify all decals and labels present
+□ Inspect chains and cables
+□ Check fluid levels
+
+OPERATIONAL CHECK:
+□ Test horn
+□ Check all lights
+□ Test brakes
+□ Verify steering response
+□ Test hydraulic controls
+□ Check backup alarm
+□ Test emergency shut-off
+
+IF ANY ISSUES FOUND:
+1. Tag equipment "OUT OF SERVICE"
+2. Complete deficiency report
+3. Notify supervisor immediately
+4. Use alternate equipment
+5. Do not operate until repaired
+
+PRODUCTION EQUIPMENT INSPECTION:
+
+BEFORE STARTUP:
+□ Clear work area
+□ Check guards and safety devices
+□ Verify emergency stops function
+□ Inspect power cords and connections
+□ Check for unusual noises or vibrations
+□ Verify all tools and fixtures secure
+□ Check coolant/lubricant levels
+
+DURING OPERATION:
+□ Monitor for unusual sounds
+□ Watch for vibration changes
+□ Check temperature indicators
+□ Observe product quality
+□ Monitor cycle times
+□ Note any error messages
+
+AT SHIFT END:
+□ Clean equipment thoroughly
+□ Wipe down surfaces
+□ Remove debris and waste
+□ Check for loose components
+□ Report any concerns
+□ Complete operator log
+
+========================================
+PREVENTIVE MAINTENANCE SCHEDULES
+========================================
+
+WEEKLY MAINTENANCE (Every Monday)
+
+FORKLIFTS:
+- Check battery connections and water levels
+- Inspect all safety devices
+- Grease pivot points
+- Check tire pressure
+- Inspect hydraulic hoses
+- Test all lights and horn
+- Clean air filter
+
+PRODUCTION EQUIPMENT:
+- Lubricate moving parts
+- Check belt tension
+- Inspect electrical connections
+- Clean cooling fans
+- Check fluid levels
+- Tighten fasteners
+- Calibrate if needed
+
+MONTHLY MAINTENANCE
+
+FORKLIFTS:
+- Change engine oil and filter
+- Replace air filter
+- Inspect brake system
+- Check hydraulic system thoroughly
+- Test all safety features
+- Inspect mast and chains
+- Document service in logbook
+
+PRODUCTION EQUIPMENT:
+- Deep cleaning
+- Replace consumables
+- Precision alignment check
+- Vibration analysis
+- Thermal inspection
+- Update software if needed
+- Document in equipment history
+
+QUARTERLY MAINTENANCE
+
+COMPREHENSIVE INSPECTION:
+- Complete teardown inspection
+- Replace wear items
+- Precision measurements
+- Performance testing
+- Electrical system check
+- Hydraulic system service
+- Bearing inspection and replacement
+- Chain and cable replacement if worn
+
+DOCUMENTATION:
+- Photograph equipment condition
+- Update maintenance records
+- Order replacement parts
+- Schedule major repairs
+- Update equipment value
+
+ANNUAL MAINTENANCE
+
+CERTIFICATION SERVICES:
+- Complete safety inspection
+- Load testing (lifting equipment)
+- Electrical certification
+- Pressure vessel inspection
+- Fire suppression system service
+- Emergency lighting test
+- Backup power system test
+
+MAJOR OVERHAUL:
+- Replace all wear components
+- Comprehensive testing
+- Recalibration
+- Paint and cosmetic repair
+- Update specifications
+- Photograph for insurance
+
+========================================
+SPECIFIC EQUIPMENT PROCEDURES
+========================================
+
+ELECTRIC FORKLIFT BATTERY MAINTENANCE
+
+DAILY:
+- Check battery charge level
+- Inspect for damage or corrosion
+- Verify proper installation
+
+WEEKLY:
+- Check electrolyte levels
+- Add distilled water if needed (only when fully charged)
+- Clean terminals
+- Check voltage
+
+MONTHLY:
+- Perform equalization charge
+- Check specific gravity of cells
+- Clean battery compartment
+- Inspect cables and connections
+- Document readings
+
+BATTERY ROOM PROCEDURES:
+- Eyewash station accessible
+- PPE required (face shield, gloves, apron)
+- Acid spill kit available
+- No smoking or open flames
+- Adequate ventilation
+
+CHARGING PROCEDURES:
+1. Park in designated charging area
+2. Turn off forklift
+3. Connect charger (red to positive, black to negative)
+4. Start charging cycle
+5. Monitor for overheating
+6. Disconnect when complete
+7. Record charge time and date
+
+AIR COMPRESSOR MAINTENANCE
+
+DAILY:
+- Check pressure gauge
+- Drain moisture from tank
+- Check for leaks
+- Verify auto-shutoff functions
+
+WEEKLY:
+- Clean air intake filter
+- Check oil level
+- Inspect drive belt
+- Test safety relief valve
+
+MONTHLY:
+- Replace air filter
+- Change oil (per hours of operation)
+- Check all connections
+- Inspect pressure switch
+- Clean cooling fins
+
+QUARTERLY:
+- Comprehensive leak check
+- Replace drive belt if worn
+- Check motor bearings
+- Test all safety devices
+- Document condition
+
+HVAC SYSTEM MAINTENANCE
+
+MONTHLY:
+- Replace air filters
+- Check thermostat operation
+- Inspect condensate drain
+- Check refrigerant levels
+- Clean condenser coils
+
+QUARTERLY:
+- Professional service
+- Check electrical connections
+- Lubricate motors
+- Inspect ductwork
+- Test all controls
+
+ANNUALLY:
+- Complete system inspection
+- Efficiency testing
+- Refrigerant leak check
+- Electrical system check
+- Clean entire system
+
+========================================
+LUBRICATION PROCEDURES
+========================================
+
+GENERAL LUBRICATION GUIDELINES:
+
+GREASE POINTS:
+- Identify all grease fittings
+- Clean fitting before greasing
+- Use appropriate grease type
+- Pump until clean grease appears
+- Wipe excess grease
+- Document lubrication date
+
+LUBRICATION SCHEDULE:
+- Daily: High-use pivot points
+- Weekly: General grease points
+- Monthly: All moving components
+- Quarterly: Comprehensive lubrication
+
+LUBRICANT TYPES:
+- EP2 Grease: General purpose
+- High-temp Grease: Over 200°F
+- Food-grade: Food contact areas
+- Anti-seize: Threaded connections
+- Way Oil: Machine slides
+- Hydraulic Oil: ISO 32 or 46
+
+OIL CHANGES:
+
+EQUIPMENT TYPE | INTERVAL | OIL TYPE
+---------------|----------|----------
+Forklifts      | 250 hrs  | 10W-30 or 15W-40
+Air Compressor | 500 hrs  | ISO 46 Synthetic
+Hydraulic      | 1000 hrs | ISO 32 Hydraulic
+Gearboxes      | 2000 hrs | ISO 220 Gear Oil
+
+OIL CHANGE PROCEDURE:
+1. Run equipment to operating temp
+2. Shut down and lockout
+3. Position drain pan
+4. Remove drain plug
+5. Allow complete drainage (30+ min)
+6. Replace drain plug and gasket
+7. Fill with new oil to proper level
+8. Run equipment and check level
+9. Check for leaks
+10. Document oil change
+
+========================================
+SPARE PARTS INVENTORY
+========================================
+
+CRITICAL SPARE PARTS (Always in Stock):
+
+FORKLIFTS:
+- Oil filters
+- Air filters
+- Hydraulic hoses
+- Forks (one set)
+- Drive belts
+- Fuses
+- Light bulbs
+- Batteries (electric)
+
+PRODUCTION EQUIPMENT:
+- Bearings (common sizes)
+- Belts (V-belts, timing belts)
+- Electrical components
+- Sensors and switches
+- Fuses and circuit breakers
+- Seals and gaskets
+- Coolant and lubricants
+
+INVENTORY MANAGEMENT:
+- Minimum stock levels defined
+- Automatic reorder points
+- Annual inventory audit
+- Obsolete parts disposal
+- Vendor relationships maintained
+
+ORDERING PROCEDURE:
+1. Check current inventory
+2. Obtain part numbers
+3. Get quotes from approved vendors
+4. Create purchase requisition
+5. Obtain approval
+6. Place order
+7. Track delivery
+8. Receive and inspect
+9. Update inventory system
+
+========================================
+MAINTENANCE METRICS
+========================================
+
+KEY PERFORMANCE INDICATORS:
+
+EQUIPMENT UPTIME:
+Target: 95% or higher
+Calculation: (Operating Hours / Total Hours) × 100
+
+MEAN TIME BETWEEN FAILURES (MTBF):
+Target: 500+ hours
+Calculation: Total Operating Time / Number of Failures
+
+MEAN TIME TO REPAIR (MTTR):
+Target: Less than 4 hours
+Calculation: Total Repair Time / Number of Repairs
+
+PREVENTIVE VS. CORRECTIVE RATIO:
+Target: 80% preventive, 20% corrective
+Calculation: (PM Hours / Total Maint Hours) × 100
+
+MAINTENANCE COST PER UNIT:
+Target: Specific to equipment
+Calculation: Total Maint Cost / Units Produced
+
+REPORTING:
+- Weekly: Downtime report
+- Monthly: KPI dashboard
+- Quarterly: Equipment condition reports
+- Annually: Maintenance budget review
+
+========================================
+DOCUMENTATION REQUIREMENTS
+========================================
+
+EQUIPMENT RECORDS:
+Each piece of equipment must have:
+- Equipment ID number
+- Purchase date and cost
+- Manufacturer specifications
+- Parts list
+- Maintenance history
+- Current condition assessment
+- Replacement schedule
+
+MAINTENANCE LOGS:
+Document each service including:
+- Date and time
+- Type of service
+- Work performed
+- Parts replaced
+- Time spent
+- Technician name
+- Next service due date
+
+RETENTION POLICY:
+- Equipment records: Life of equipment + 5 years
+- Maintenance logs: 7 years
+- Work orders: 3 years
+- Inspection reports: 5 years
+- Warranty documents: Warranty period + 1 year
+
+========================================
+SAFETY REQUIREMENTS
+========================================
+
+PERSONAL PROTECTIVE EQUIPMENT:
+
+MINIMUM REQUIRED:
+- Safety glasses
+- Steel-toed boots
+- Hearing protection (if over 85 dB)
+- Work gloves
+
+TASK-SPECIFIC:
+- Welding: Welding helmet, leather gloves
+- Chemical: Chemical-resistant gloves, face shield
+- Electrical: Insulated gloves, arc-rated clothing
+- Confined Space: Respirator, harness
+
+CONFINED SPACE ENTRY:
+Required for tanks, pits, vessels
+
+PROCEDURE:
+1. Obtain entry permit
+2. Test atmosphere (O2, LEL, toxic gases)
+3. Establish ventilation
+4. Post attendant at entrance
+5. Use retrieval equipment
+6. Maintain communication
+7. Emergency rescue plan ready
+
+ELECTRICAL SAFETY:
+- Qualified electrician only
+- Lockout/tagout required
+- Insulated tools
+- Arc-rated PPE
+- No energized work unless justified
+
+========================================
+EMERGENCY MAINTENANCE PROCEDURES
+========================================
+
+EQUIPMENT FAILURE DURING OPERATION:
+
+IMMEDIATE ACTIONS:
+1. Press emergency stop
+2. Secure work area
+3. Evacuate if dangerous
+4. Call maintenance (Extension 5100)
+5. Notify supervisor
+6. Complete incident report
+
+PRIORITY RESPONSE:
+- Safety hazards: Within 15 minutes
+- Production stoppage: Within 30 minutes
+- Partial operation: Within 2 hours
+- Non-critical: Next business day
+
+TEMPORARY REPAIRS:
+- Authorized only if safe
+- Document temporary fix
+- Schedule permanent repair
+- Monitor closely
+- Post warning signs
+
+EQUIPMENT REPLACEMENT CRITERIA:
+Consider replacement when:
+- Repair cost > 50% of replacement cost
+- Frequent breakdowns (3+ per month)
+- Parts no longer available
+- Safety cannot be assured
+- Technology obsolete
+- Maintenance cost exceeds depreciation
+
+========================================
+TRAINING REQUIREMENTS
+========================================
+
+MAINTENANCE TECHNICIANS:
+
+INITIAL TRAINING:
+- Safety procedures (40 hours)
+- Equipment-specific training
+- Lockout/tagout certification
+- Confined space entry
+- Forklift certification
+- Electrical safety (if applicable)
+- Hydraulic systems
+
+CONTINUING EDUCATION:
+- Annual safety refresher
+- New equipment training
+- Advanced diagnostics
+- Manufacturer certifications
+- Industry conferences
+
+OPERATORS:
+
+REQUIRED TRAINING:
+- Daily inspection procedures
+- Basic troubleshooting
+- When to call maintenance
+- Lockout/tagout awareness
+- Equipment-specific operation
+
+ANNUAL REVIEW:
+- Safety procedures
+- Inspection checklist updates
+- New equipment orientation
+- Best practices
+
+========================================
+VENDOR MANAGEMENT
+========================================
+
+APPROVED VENDORS:
+Maintain list of qualified vendors for:
+- Parts suppliers
+- Service providers
+- Specialty repairs
+- Emergency services
+
+VENDOR QUALIFICATION:
+- Insurance verification
+- License validation
+- Reference checks
+- Pricing agreements
+- Service level agreements
+
+SERVICE CONTRACTS:
+- Annual HVAC maintenance
+- Fire suppression inspection
+- Elevator service
+- Boiler inspection
+- Emergency generator testing
+
+========================================
+CONTINUOUS IMPROVEMENT
+========================================
+
+MONTHLY REVIEW MEETINGS:
+Discuss:
+- Recent failures and root causes
+- Schedule compliance
+- Budget vs. actual costs
+- Safety incidents
+- Process improvements
+
+IMPROVEMENT INITIATIVES:
+- Operator feedback
+- New technology evaluation
+- Efficiency improvements
+- Cost reduction opportunities
+- Reliability enhancements
+
+========================================
+REVISION HISTORY
+========================================
+
+Version 2.0 - January 2025
+- Added predictive maintenance section
+- Updated LOTO procedures
+- Revised PM schedules
+- Added KPI tracking
+
+Version 1.5 - January 2024
+- Initial implementation
+
+========================================
+APPROVAL
+========================================
+
+Prepared by: Maintenance Manager
+Reviewed by: Safety Officer
+Approved by: Facility Manager
+
+Next Review Date: January 2026
+
+Document Control: SOP-MAINT-001
+Classification: Internal Use
+Distribution: All Maintenance Staff, Supervisors
+
+========================================
+CONTACT INFORMATION
+========================================
+
+Maintenance Department: Extension 5100
+Emergency Maintenance: Extension 5911
+Parts Ordering: parts@company.com
+Safety Officer: Extension 5555
+Facility Manager: Extension 5000

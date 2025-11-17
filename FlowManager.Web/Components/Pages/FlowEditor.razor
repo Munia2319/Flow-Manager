@@ -1,0 +1,922 @@
+@rendermode InteractiveServer
+@page "/flows/edit/{FlowId}"
+@using FlowManager.Core.Models
+@using FlowManager.Core.Services
+@using System.Text.Json
+@inject FlowStorageService Storage
+@inject NavigationManager Navigation
+@inject IConfiguration Configuration
+
+<PageTitle>Edit Flow - @(flow?.Name ?? "Flow")</PageTitle>
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi bi-pencil-square"></i> Flow Builder
+        </h1>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary" @onclick="GoBack">
+                <i class="bi bi-arrow-left"></i> Back
+            </button>
+            <button class="btn btn-info" @onclick="ValidateFlow">
+                <i class="bi bi-check-circle"></i> Validate
+            </button>
+            <button class="btn btn-success" @onclick="SaveFlow" disabled="@isSaving">
+                @if (isSaving)
+                {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                }
+                <i class="bi bi-save"></i> Save
+            </button>
+        </div>
+    </div>
+
+    @if (flow == null)
+    {
+        <div class="alert alert-danger">
+            <h4>Flow not found!</h4>
+            <p>Flow ID: @FlowId</p>
+        </div>
+    }
+    else
+    {
+        <!-- Flow Info Card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Flow Name *</label>
+                        <input type="text" class="form-control" @bind="flowName" placeholder="My Custom Flow" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Description</label>
+                        <input type="text" class="form-control" @bind="flowDescription" placeholder="What does this flow do?" />
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(validationMessage))
+                {
+                    <div class="alert @(isValidationSuccess ? "alert-success" : "alert-danger") mt-3 mb-0">
+                        <i class="bi bi-@(isValidationSuccess ? "check-circle" : "exclamation-triangle")"></i>
+                        @validationMessage
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "nodes" ? "active" : "")" @onclick='() => activeTab = "nodes"'>
+                    <i class="bi bi-diagram-3"></i> Nodes (@flow.Nodes.Count)
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "edges" ? "active" : "")" @onclick='() => activeTab = "edges"'>
+                    <i class="bi bi-arrow-left-right"></i> Edges (@flow.Edges.Count)
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "preview" ? "active" : "")" @onclick='() => activeTab = "preview"'>
+                    <i class="bi bi-eye"></i> Preview
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link @(activeTab == "json" ? "active" : "")" @onclick='() => activeTab = "json"'>
+                    <i class="bi bi-code-square"></i> JSON
+                </button>
+            </li>
+        </ul>
+
+        <!-- NODES TAB -->
+        @if (activeTab == "nodes")
+        {
+            <div class="row">
+                <!-- Node Palette -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Add Node</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-secondary" @onclick="() => ShowAddNodeModal(NodeType.Input)">
+                                    <i class="bi bi-inbox"></i> Input
+                                </button>
+                                <button class="btn btn-outline-primary" @onclick="() => ShowAddNodeModal(NodeType.Orchestrator)">
+                                    <i class="bi bi-diagram-3"></i> Orchestrator (AI Router)
+                                </button>
+                                <button class="btn btn-outline-info" @onclick="() => ShowAddNodeModal(NodeType.OpenAIChat)">
+                                    <i class="bi bi-chat-dots"></i> OpenAI Chat
+                                </button>
+                                <button class="btn btn-outline-success" @onclick="() => ShowAddNodeModal(NodeType.SearchDepartment)">
+                                    <i class="bi bi-search"></i> Search Department
+                                </button>
+                                <button class="btn btn-outline-warning" @onclick="() => ShowAddNodeModal(NodeType.DataDepartment)">
+                                    <i class="bi bi-database"></i> Data Department
+                                </button>
+                                <button class="btn btn-outline-danger" @onclick="() => ShowAddNodeModal(NodeType.FunctionDepartment)">
+                                    <i class="bi bi-gear"></i> Function Department
+                                </button>
+                                <button class="btn btn-outline-dark" @onclick="() => ShowAddNodeModal(NodeType.ImageDepartment)">
+                                    <i class="bi bi-image"></i> Image Department
+                                </button>
+                                <button class="btn btn-outline-secondary" @onclick="() => ShowAddNodeModal(NodeType.Formatter)">
+                                    <i class="bi bi-file-text"></i> Formatter
+                                </button>
+                                <button class="btn btn-outline-info" @onclick="() => ShowAddNodeModal(NodeType.PromptTemplate)">
+                                    <i class="bi bi-file-earmark-text"></i> Prompt Template
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Node List -->
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0"><i class="bi bi-list"></i> Current Nodes</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (flow.Nodes.Count == 0)
+                            {
+                                <p class="text-muted text-center py-4">No nodes yet. Add nodes from the left panel.</p>
+                            }
+                            else
+                            {
+                                <div class="list-group">
+                                    @foreach (var node in flow.Nodes)
+                                    {
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">
+                                                        <span class="badge bg-primary">@node.Id</span>
+                                                        <span class="text-muted ms-2">@node.Type</span>
+                                                    </h6>
+                                                    @if (!string.IsNullOrEmpty(node.Condition))
+                                                    {
+                                                        <small class="text-muted">
+                                                            <i class="bi bi-filter"></i> Condition: <code>@node.Condition</code>
+                                                        </small>
+                                                    }
+                                                    @if (node.Config.Count > 0)
+                                                    {
+                                                        <div class="mt-1">
+                                                            <small class="text-muted">
+                                                                <i class="bi bi-gear"></i> Config: @node.Config.Count property(ies)
+                                                            </small>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-primary" @onclick="() => EditNode(node)">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteNode(node.Id)">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- EDGES TAB -->
+        @if (activeTab == "edges")
+        {
+            <div class="row">
+                <!-- Add Edge Form -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Add Edge</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">From Node *</label>
+                                <select class="form-select" @bind="newEdge_From">
+                                    <option value="">-- Select --</option>
+                                    @foreach (var node in flow.Nodes)
+                                    {
+                                        <option value="@node.Id">@node.Id (@node.Type)</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">To Node *</label>
+                                <select class="form-select" @bind="newEdge_To">
+                                    <option value="">-- Select --</option>
+                                    @foreach (var node in flow.Nodes)
+                                    {
+                                        <option value="@node.Id">@node.Id (@node.Type)</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Condition (optional)</label>
+                                <input type="text" class="form-control font-monospace" @bind="newEdge_Condition"
+                                       placeholder="{{nodeId.output}} contains 'value'" style="font-size: 12px;" />
+                                <small class="text-muted">Leave empty for unconditional edge</small>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">From Output</label>
+                                    <input type="text" class="form-control" @bind="newEdge_FromOutput" placeholder="output" />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">To Input</label>
+                                    <input type="text" class="form-control" @bind="newEdge_ToInput" placeholder="input" />
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3" @onclick="AddEdge">
+                                <i class="bi bi-plus"></i> Add Edge
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edge List -->
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0"><i class="bi bi-list"></i> Current Edges</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (flow.Edges.Count == 0)
+                            {
+                                <p class="text-muted text-center py-4">No edges yet. Connect nodes using the form on the left.</p>
+                            }
+                            else
+                            {
+                                <div class="list-group">
+                                    @foreach (var (edge, index) in flow.Edges.Select((e, i) => (e, i)))
+                                    {
+                                        <div class="list-group-item">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>@edge.From</strong>
+                                                    <i class="bi bi-arrow-right mx-2"></i>
+                                                    <strong>@edge.To</strong>
+                                                    @if (!string.IsNullOrEmpty(edge.Condition))
+                                                    {
+                                                        <div class="mt-1">
+                                                            <small class="text-muted">
+                                                                <i class="bi bi-filter"></i> <code>@edge.Condition</code>
+                                                            </small>
+                                                        </div>
+                                                    }
+                                                    @if (edge.FromOutput != "output" || edge.ToInput != "input")
+                                                    {
+                                                        <div class="mt-1">
+                                                            <small class="text-muted">
+                                                                <i class="bi bi-link-45deg"></i> @edge.FromOutput → @edge.ToInput
+                                                            </small>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteEdge(index)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- PREVIEW TAB -->
+        @if (activeTab == "preview")
+        {
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-eye"></i> Flow Preview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="flow-preview">
+                        @if (flow.Nodes.Count == 0)
+                        {
+                            <p class="text-muted text-center py-5">No nodes to preview. Add nodes first.</p>
+                        }
+                        else
+                        {
+                            @foreach (var node in flow.Nodes)
+                            {
+                                <div class="preview-node">
+                                    <div class="badge bg-primary">@node.Id</div>
+                                    <div class="node-type">@node.Type</div>
+                                </div>
+
+                                @* Show outgoing edges *@
+                                @foreach (var edge in flow.Edges.Where(e => e.From == node.Id))
+                                {
+                                    <div class="preview-edge">
+                                        <span class="edge-arrow">↓</span>
+                                        @if (!string.IsNullOrEmpty(edge.Condition))
+                                        {
+                                            <div class="edge-condition">
+                                                <small class="text-muted"><code>@edge.Condition</code></small>
+                                            </div>
+                                        }
+                                        <span class="text-muted">→ @edge.To</span>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- JSON TAB -->
+        @if (activeTab == "json")
+        {
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0"><i class="bi bi-code-square"></i> Raw JSON (Advanced)</h5>
+                </div>
+                <div class="card-body">
+                    <textarea class="form-control font-monospace"
+                              @bind="flowJson"
+                              @bind:event="oninput"
+                              rows="30"
+                              style="font-size: 12px;"></textarea>
+                    <div class="mt-2">
+                        <button class="btn btn-primary" @onclick="SyncFromJson">
+                            <i class="bi bi-arrow-repeat"></i> Apply JSON Changes
+                        </button>
+                        <button class="btn btn-secondary ms-2" @onclick="SyncToJson">
+                            <i class="bi bi-arrow-clockwise"></i> Refresh JSON from Editor
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<!-- Node Configuration Modal -->
+@if (showNodeModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @if (isEditingNode)
+                        {
+                            <text>Edit Node: @editingNode?.Id</text>
+                        }
+                        else
+                        {
+                            <text>Add @selectedNodeType Node</text>
+                        }
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseNodeModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Node ID *</label>
+                        <input type="text" class="form-control" @bind="modalNode_Id" placeholder="input1" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Node Type *</label>
+                        <input type="text" class="form-control" @bind="modalNode_Type" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Run Condition (optional)</label>
+                        <input type="text" class="form-control font-monospace" @bind="modalNode_Condition"
+                               placeholder="{{nodeId.output}} is true" style="font-size: 12px;" />
+                        <small class="text-muted">Leave empty to always run this node</small>
+                    </div>
+
+                    @* Node-specific configuration *@
+                    @if (requiresApiKey)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">API Key</label>
+                            <input type="text" class="form-control font-monospace" @bind="modalNode_ApiKey"
+                                   placeholder="Loaded from config" style="font-size: 11px;" />
+                            <small class="text-muted">Defaults to system API key if empty</small>
+                        </div>
+                    }
+
+                    @if (selectedNodeType == NodeType.OpenAIChat || selectedNodeType == NodeType.Orchestrator)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Model</label>
+                            <select class="form-select" @bind="modalNode_Model">
+                                <option value="gpt-4o-mini">GPT-4o Mini (Fast, Cheap - Recommended)</option>
+                                <option value="gpt-4o">GPT-4o (Balanced)</option>
+                                <option value="gpt-4">GPT-4 (Most Capable)</option>
+                                <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fastest, Cheapest)</option>
+                                <option value="o1-mini">o1-mini (Advanced Reasoning)</option>
+                                <option value="o1">o1 (Most Advanced Reasoning)</option>
+                            </select>
+                            <small class="text-muted">Select OpenAI model to use for this node</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">System Prompt</label>
+                            <textarea class="form-control" @bind="modalNode_SystemPrompt" rows="4"
+                                      placeholder="You are a helpful assistant..."></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label">Temperature</label>
+                                <input type="number" class="form-control" @bind="modalNode_Temperature"
+                                       step="0.1" min="0" max="2" placeholder="0.7" />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Max Tokens</label>
+                                <input type="number" class="form-control" @bind="modalNode_MaxTokens"
+                                       placeholder="2000" />
+                            </div>
+                        </div>
+                    }
+
+                    @if (selectedNodeType == NodeType.PromptTemplate)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Template</label>
+                            <textarea class="form-control font-monospace" @bind="modalNode_Template" rows="5"
+                                      placeholder="Hello {{name}}, your order {{orderId}} is ready!"
+                                      style="font-size: 12px;"></textarea>
+                            <small class="text-muted">Use {{"{{"}}variable{{"}}"}} syntax for placeholders</small>
+                        </div>
+                    }
+
+                    @if (selectedNodeType == NodeType.ImageDepartment)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Image URL</label>
+                            <input type="text" class="form-control" @bind="modalNode_ImageUrl"
+                                   placeholder="https://example.com/image.jpg" />
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseNodeModal">Cancel</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveNodeFromModal">
+                        <i class="bi bi-save"></i> @(isEditingNode ? "Update" : "Add") Node
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? FlowId { get; set; }
+
+    private Flow? flow;
+    private string flowName = "";
+    private string flowDescription = "";
+    private string flowJson = "";
+    private string validationMessage = "";
+    private bool isValidationSuccess = false;
+    private bool isSaving = false;
+    private string activeTab = "nodes";
+
+    // Node modal state
+    private bool showNodeModal = false;
+    private bool isEditingNode = false;
+    private NodeDefinition? editingNode = null;
+    private NodeType selectedNodeType;
+    private string modalNode_Id = "";
+    private string modalNode_Type = "";
+    private string modalNode_Condition = "";
+    private string modalNode_ApiKey = "";
+    private string modalNode_SystemPrompt = "";
+    private string modalNode_Template = "";
+    private string modalNode_ImageUrl = "";
+    private string modalNode_Model = "gpt-4o-mini";
+    private double modalNode_Temperature = 0.7;
+    private int modalNode_MaxTokens = 2000;
+
+    // Edge form state
+    private string newEdge_From = "";
+    private string newEdge_To = "";
+    private string newEdge_Condition = "";
+    private string newEdge_FromOutput = "output";
+    private string newEdge_ToInput = "input";
+
+    private enum NodeType
+    {
+        Input,
+        Orchestrator,
+        OpenAIChat,
+        SearchDepartment,
+        DataDepartment,
+        FunctionDepartment,
+        ImageDepartment,
+        Formatter,
+        PromptTemplate,
+        Transform
+    }
+
+    private bool requiresApiKey => selectedNodeType switch
+    {
+        NodeType.OpenAIChat => true,
+        NodeType.Orchestrator => true,
+        NodeType.SearchDepartment => true,
+        NodeType.DataDepartment => true,
+        NodeType.FunctionDepartment => true,
+        NodeType.ImageDepartment => true,
+        NodeType.Formatter => true,
+        _ => false
+    };
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(FlowId))
+        {
+            try
+            {
+                flow = Storage.LoadFlow(FlowId);
+                flowName = flow.Name ?? "Untitled";
+                flowDescription = flow.Description ?? "";
+                SyncToJson();
+            }
+            catch (Exception ex)
+            {
+                validationMessage = $"Error loading flow: {ex.Message}";
+            }
+        }
+    }
+
+    private void ShowAddNodeModal(NodeType type)
+    {
+        selectedNodeType = type;
+        isEditingNode = false;
+        editingNode = null;
+
+        // Generate default ID
+        var typePrefix = type.ToString().ToLower();
+        var existingCount = flow!.Nodes.Count(n => n.Id?.StartsWith(typePrefix) == true);
+        modalNode_Id = $"{typePrefix}{existingCount + 1}";
+        modalNode_Type = type.ToString();
+        modalNode_Condition = "";
+        modalNode_ApiKey = "";
+        modalNode_SystemPrompt = "";
+        modalNode_Template = "";
+        modalNode_ImageUrl = "";
+        modalNode_Model = "gpt-4o-mini";
+        modalNode_Temperature = 0.7;
+        modalNode_MaxTokens = 2000;
+
+        // Set defaults based on type
+        if (type == NodeType.Orchestrator)
+        {
+            modalNode_SystemPrompt = "You are the central orchestrator. Analyze the user question and route to appropriate departments.";
+        }
+
+        showNodeModal = true;
+    }
+
+    private void EditNode(NodeDefinition node)
+    {
+        isEditingNode = true;
+        editingNode = node;
+        selectedNodeType = Enum.Parse<NodeType>(node.Type ?? "Input");
+
+        modalNode_Id = node.Id ?? "";
+        modalNode_Type = node.Type ?? "";
+        modalNode_Condition = node.Condition ?? "";
+
+        // Load config
+        if (node.Config.ContainsKey("apiKey"))
+            modalNode_ApiKey = node.Config["apiKey"]?.ToString() ?? "";
+        if (node.Config.ContainsKey("systemPrompt"))
+            modalNode_SystemPrompt = node.Config["systemPrompt"]?.ToString() ?? "";
+        if (node.Config.ContainsKey("template"))
+            modalNode_Template = node.Config["template"]?.ToString() ?? "";
+        if (node.Config.ContainsKey("imageUrl"))
+            modalNode_ImageUrl = node.Config["imageUrl"]?.ToString() ?? "";
+        if (node.Config.ContainsKey("model"))
+            modalNode_Model = node.Config["model"]?.ToString() ?? "gpt-4o-mini";
+        if (node.Config.ContainsKey("temperature"))
+        {
+            var tempValue = node.Config["temperature"];
+            if (tempValue is JsonElement jsonTemp)
+                modalNode_Temperature = jsonTemp.GetDouble();
+            else if (double.TryParse(tempValue?.ToString(), out var parsedTemp))
+                modalNode_Temperature = parsedTemp;
+        }
+        if (node.Config.ContainsKey("maxTokens"))
+        {
+            var tokensValue = node.Config["maxTokens"];
+            if (tokensValue is JsonElement jsonTokens)
+                modalNode_MaxTokens = jsonTokens.GetInt32();
+            else if (int.TryParse(tokensValue?.ToString(), out var parsedTokens))
+                modalNode_MaxTokens = parsedTokens;
+        }
+
+        showNodeModal = true;
+    }
+
+    private void SaveNodeFromModal()
+    {
+        if (string.IsNullOrWhiteSpace(modalNode_Id))
+        {
+            validationMessage = "Node ID is required";
+            isValidationSuccess = false;
+            return;
+        }
+
+        var config = new Dictionary<string, object>();
+
+        // Add API key if needed
+        if (requiresApiKey)
+        {
+            var apiKey = string.IsNullOrWhiteSpace(modalNode_ApiKey)
+                ? Configuration["KnowledgeBase:OpenAIApiKey"]
+                : modalNode_ApiKey;
+            config["apiKey"] = apiKey ?? "";
+        }
+
+        // Add node-specific config
+        if (!string.IsNullOrWhiteSpace(modalNode_SystemPrompt))
+            config["systemPrompt"] = modalNode_SystemPrompt;
+        if (!string.IsNullOrWhiteSpace(modalNode_Template))
+            config["template"] = modalNode_Template;
+        if (!string.IsNullOrWhiteSpace(modalNode_ImageUrl))
+            config["imageUrl"] = modalNode_ImageUrl;
+        if (selectedNodeType == NodeType.OpenAIChat || selectedNodeType == NodeType.Orchestrator)
+        {
+            if (!string.IsNullOrWhiteSpace(modalNode_Model))
+                config["model"] = modalNode_Model;
+            config["temperature"] = modalNode_Temperature;
+            config["maxTokens"] = modalNode_MaxTokens;
+        }
+
+        if (isEditingNode && editingNode != null)
+        {
+            // Update existing node
+            editingNode.Id = modalNode_Id;
+            editingNode.Type = modalNode_Type;
+            editingNode.Condition = string.IsNullOrWhiteSpace(modalNode_Condition) ? null : modalNode_Condition;
+            editingNode.Config = config;
+        }
+        else
+        {
+            // Add new node
+            var newNode = new NodeDefinition
+            {
+                Id = modalNode_Id,
+                Type = modalNode_Type,
+                Condition = string.IsNullOrWhiteSpace(modalNode_Condition) ? null : modalNode_Condition,
+                Config = config
+            };
+            flow!.Nodes.Add(newNode);
+        }
+
+        SyncToJson();
+        CloseNodeModal();
+    }
+
+    private void CloseNodeModal()
+    {
+        showNodeModal = false;
+        isEditingNode = false;
+        editingNode = null;
+    }
+
+    private void DeleteNode(string? nodeId)
+    {
+        if (string.IsNullOrEmpty(nodeId)) return;
+
+        var node = flow!.Nodes.FirstOrDefault(n => n.Id == nodeId);
+        if (node != null)
+        {
+            // Remove node
+            flow.Nodes.Remove(node);
+
+            // Remove edges connected to this node
+            flow.Edges.RemoveAll(e => e.From == nodeId || e.To == nodeId);
+
+            SyncToJson();
+        }
+    }
+
+    private void AddEdge()
+    {
+        if (string.IsNullOrEmpty(newEdge_From) || string.IsNullOrEmpty(newEdge_To))
+        {
+            validationMessage = "Both From and To nodes are required";
+            isValidationSuccess = false;
+            return;
+        }
+
+        var newEdge = new Edge
+        {
+            From = newEdge_From,
+            To = newEdge_To,
+            Condition = string.IsNullOrWhiteSpace(newEdge_Condition) ? null : newEdge_Condition,
+            FromOutput = string.IsNullOrWhiteSpace(newEdge_FromOutput) ? "output" : newEdge_FromOutput,
+            ToInput = string.IsNullOrWhiteSpace(newEdge_ToInput) ? "input" : newEdge_ToInput
+        };
+
+        flow!.Edges.Add(newEdge);
+
+        // Reset form
+        newEdge_From = "";
+        newEdge_To = "";
+        newEdge_Condition = "";
+        newEdge_FromOutput = "output";
+        newEdge_ToInput = "input";
+
+        SyncToJson();
+        validationMessage = "✅ Edge added successfully!";
+        isValidationSuccess = true;
+    }
+
+    private void DeleteEdge(int index)
+    {
+        if (index >= 0 && index < flow!.Edges.Count)
+        {
+            flow.Edges.RemoveAt(index);
+            SyncToJson();
+        }
+    }
+
+    private void SyncToJson()
+    {
+        flowJson = JsonSerializer.Serialize(flow, new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+    }
+
+    private void SyncFromJson()
+    {
+        try
+        {
+            var tempFlow = JsonSerializer.Deserialize<Flow>(flowJson, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (tempFlow != null)
+            {
+                flow = tempFlow;
+                flowName = flow.Name ?? "";
+                flowDescription = flow.Description ?? "";
+                validationMessage = "✅ JSON applied successfully!";
+                isValidationSuccess = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            validationMessage = $"JSON Error: {ex.Message}";
+            isValidationSuccess = false;
+        }
+    }
+
+    private void ValidateFlow()
+    {
+        try
+        {
+            if (flow == null)
+            {
+                validationMessage = "Flow is null";
+                isValidationSuccess = false;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(flowName))
+            {
+                validationMessage = "Flow name is required";
+                isValidationSuccess = false;
+                return;
+            }
+
+            if (flow.Nodes.Count == 0)
+            {
+                validationMessage = "Flow must have at least one node";
+                isValidationSuccess = false;
+                return;
+            }
+
+            // Check for invalid edges
+            foreach (var edge in flow.Edges)
+            {
+                if (!flow.Nodes.Any(n => n.Id == edge.From))
+                {
+                    validationMessage = $"Edge has invalid 'From' node: {edge.From}";
+                    isValidationSuccess = false;
+                    return;
+                }
+                if (!flow.Nodes.Any(n => n.Id == edge.To))
+                {
+                    validationMessage = $"Edge has invalid 'To' node: {edge.To}";
+                    isValidationSuccess = false;
+                    return;
+                }
+            }
+
+            validationMessage = $"✅ Flow is valid! {flow.Nodes.Count} nodes, {flow.Edges.Count} edges";
+            isValidationSuccess = true;
+        }
+        catch (Exception ex)
+        {
+            validationMessage = $"Validation error: {ex.Message}";
+            isValidationSuccess = false;
+        }
+    }
+
+    private async Task SaveFlow()
+    {
+        ValidateFlow();
+        if (!isValidationSuccess) return;
+
+        try
+        {
+            isSaving = true;
+
+            flow!.Name = flowName;
+            flow.Description = flowDescription;
+            flow.UpdatedAt = DateTime.UtcNow;
+
+            Storage.SaveFlow(flow);
+
+            validationMessage = "✅ Flow saved successfully!";
+            isValidationSuccess = true;
+
+            await Task.Delay(1000);
+            Navigation.NavigateTo("/flows");
+        }
+        catch (Exception ex)
+        {
+            validationMessage = $"Save error: {ex.Message}";
+            isValidationSuccess = false;
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/flows");
+    }
+}
+
+<style>
+    .flow-preview {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .preview-node {
+        display: inline-block;
+        padding: 15px 25px;
+        background: #e3f2fd;
+        border: 2px solid #2196f3;
+        border-radius: 8px;
+        margin: 10px;
+    }
+
+    .preview-node .badge {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+
+    .node-type {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #666;
+        font-weight: 600;
+    }
+
+    .preview-edge {
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    .edge-arrow {
+        font-size: 24px;
+        color: #666;
+    }
+
+    .edge-condition {
+        margin: 5px 0;
+        padding: 5px 10px;
+        background: #fff3e0;
+        border-radius: 4px;
+        display: inline-block;
+    }
+</style>

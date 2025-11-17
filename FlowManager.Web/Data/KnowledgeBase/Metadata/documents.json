@@ -1,0 +1,82 @@
+[
+  {
+    "Id": "8922dcec-a865-429c-aad1-0486dca8f7d0",
+    "Title": "Emergency-Response-Procedures",
+    "Category": 0,
+    "OriginalFileName": "Emergency-Response-Procedures.txt",
+    "FilePath": "C:\\Users\\mushf\\Desktop\\FlowManager\\FlowManager.Web\\Data/KnowledgeBase\\Documents\\8922dcec-a865-429c-aad1-0486dca8f7d0.txt",
+    "UploadDate": "2025-11-10T12:08:31.0985736Z",
+    "FileSize": 12376,
+    "Status": 2,
+    "ChunkCount": 3,
+    "Metadata": {
+      "uploadedBy": "User",
+      "customTitle": "Emergency-Response-Procedures"
+    },
+    "ErrorMessage": null
+  },
+  {
+    "Id": "7f83f614-894d-4f2a-b7ae-223f8bb9ef43",
+    "Title": "Employee-Handbook",
+    "Category": 1,
+    "OriginalFileName": "Employee-Handbook.txt",
+    "FilePath": "C:\\Users\\mushf\\Desktop\\FlowManager\\FlowManager.Web\\Data/KnowledgeBase\\Documents\\7f83f614-894d-4f2a-b7ae-223f8bb9ef43.txt",
+    "UploadDate": "2025-11-10T12:09:47.4665793Z",
+    "FileSize": 10764,
+    "Status": 2,
+    "ChunkCount": 3,
+    "Metadata": {
+      "uploadedBy": "User",
+      "customTitle": "Employee-Handbook"
+    },
+    "ErrorMessage": null
+  },
+  {
+    "Id": "3d557dd3-2b1d-4ffd-9760-d7f2346636c6",
+    "Title": "Equipment-Maintenance-Procedures",
+    "Category": 2,
+    "OriginalFileName": "Equipment-Maintenance-Procedures.txt",
+    "FilePath": "C:\\Users\\mushf\\Desktop\\FlowManager\\FlowManager.Web\\Data/KnowledgeBase\\Documents\\3d557dd3-2b1d-4ffd-9760-d7f2346636c6.txt",
+    "UploadDate": "2025-11-10T12:10:17.0610131Z",
+    "FileSize": 16531,
+    "Status": 2,
+    "ChunkCount": 4,
+    "Metadata": {
+      "uploadedBy": "User",
+      "customTitle": "Equipment-Maintenance-Procedures"
+    },
+    "ErrorMessage": null
+  },
+  {
+    "Id": "95724e5f-f5cd-481b-a4e1-c3397628bdb0",
+    "Title": "Safety-Manual-Forklift-Operations",
+    "Category": 0,
+    "OriginalFileName": "Safety-Manual-Forklift-Operations.txt",
+    "FilePath": "C:\\Users\\mushf\\Desktop\\FlowManager\\FlowManager.Web\\Data/KnowledgeBase\\Documents\\95724e5f-f5cd-481b-a4e1-c3397628bdb0.txt",
+    "UploadDate": "2025-11-10T12:10:43.4639381Z",
+    "FileSize": 6799,
+    "Status": 2,
+    "ChunkCount": 2,
+    "Metadata": {
+      "uploadedBy": "User",
+      "customTitle": "Safety-Manual-Forklift-Operations"
+    },
+    "ErrorMessage": null
+  },
+  {
+    "Id": "9b0a33f6-963a-4456-8907-4d1b95c3a421",
+    "Title": "Standard-Operating-Procedure-Warehouse",
+    "Category": 2,
+    "OriginalFileName": "Standard-Operating-Procedure-Warehouse.txt",
+    "FilePath": "C:\\Users\\mushf\\Desktop\\FlowManager\\FlowManager.Web\\Data/KnowledgeBase\\Documents\\9b0a33f6-963a-4456-8907-4d1b95c3a421.txt",
+    "UploadDate": "2025-11-10T12:11:09.9875304Z",
+    "FileSize": 20057,
+    "Status": 2,
+    "ChunkCount": 5,
+    "Metadata": {
+      "uploadedBy": "User",
+      "customTitle": "Standard-Operating-Procedure-Warehouse"
+    },
+    "ErrorMessage": null
+  }
+]

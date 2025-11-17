@@ -1,0 +1,40 @@
+{
+  "id": "flow-291a9e85",
+  "name": "Spam classifier",
+  "description": "",
+  "tenantId": "default",
+  "nodes": [
+    {
+      "id": "input1",
+      "type": "Input",
+      "config": {
+        "text": "Your question here"
+      },
+      "condition": null
+    },
+    {
+      "id": "openaichat1",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "systemPrompt": "You are a spam email classifier. Analyze the email and respond with: SPAM or NOT SPAM. Then provide a brief reason (1-2 sentences). Format: Classification: [SPAM/NOT SPAM]. Reason: [explanation]",
+        "temperature": 0.1,
+        "maxTokens": 2000
+      },
+      "condition": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "input1",
+      "to": "openaichat1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    }
+  ],
+  "createdAt": "2025-11-13T13:31:52.3459212Z",
+  "updatedAt": "2025-11-14T09:48:18.3424835Z",
+  "lastModified": "2025-11-14T09:48:18.3429857Z"
+}

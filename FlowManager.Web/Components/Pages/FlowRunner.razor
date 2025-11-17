@@ -1,0 +1,1336 @@
+@rendermode InteractiveServer
+@page "/flows/run/{FlowId}"
+@page "/flows/run/{FlowId}/{ConversationId}"
+@using FlowManager.Core.Models
+@using FlowManager.Core.Models.KnowledgeBase
+@using FlowManager.Core.Services
+@using FlowManager.Core.Engine
+@inject FlowStorageService Storage
+@inject FlowOrchestrator Orchestrator
+@inject NavigationManager Navigation
+@inject IConversationStore ConversationStore
+
+<PageTitle>Run Flow - @(flow?.Name ?? "Flow")</PageTitle>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Left Sidebar: Flow Info & Controls -->
+        <div class="col-md-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>▶️ Run Flow</h2>
+                <button class="btn btn-outline-secondary" @onclick="GoBack">
+                    <i class="bi bi-arrow-left"></i> Back
+                </button>
+            </div>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <strong>Error:</strong> @errorMessage
+                    <button type="button" class="btn-close" @onclick="() => errorMessage = null"></button>
+                </div>
+            }
+
+            @if (flow == null)
+            {
+                <div class="alert alert-danger">
+                    <h4>Flow not found!</h4>
+                    <p>Flow ID: @FlowId</p>
+                </div>
+            }
+            else
+            {
+                <!-- Flow Info Card -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-diagram-3"></i> @flow.Name
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <i class="bi bi-circle-fill text-primary"></i>
+                            <strong>Nodes:</strong> @flow.Nodes.Count
+                        </div>
+                        <div class="mb-2">
+                            <i class="bi bi-arrow-left-right text-success"></i>
+                            <strong>Edges:</strong> @flow.Edges.Count
+                        </div>
+                        <div>
+                            <i class="bi bi-clock-history"></i>
+                            <strong>Created:</strong> @flow.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🆕 DYNAMIC INPUT CARD -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-chat-left-text"></i> Input
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Your Question:</label>
+                            <textarea class="form-control" 
+                                      @bind="userInput" 
+                                      rows="4" 
+                                      placeholder="Type your question here...&#10;&#10;Examples:&#10;- When was Tesla founded?&#10;- What are the forklift safety procedures?&#10;- Extract product code from: XYZ-123"></textarea>
+                        </div>
+                        <div class="text-muted">
+                            <small>
+                                <i class="bi bi-lightbulb"></i> 
+                                <strong>Tip:</strong> The orchestrator will automatically route your question to the right department!
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Execution Control Card -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-gear"></i> Execution Control
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!isRunning && executionContext == null)
+                        {
+                            <div class="d-grid">
+                                <button class="btn btn-success btn-lg" 
+                                        @onclick="StartExecution"
+                                        disabled="@string.IsNullOrWhiteSpace(userInput)">
+                                    <i class="bi bi-play-fill"></i> Start Execution
+                                </button>
+                            </div>
+                            @if (string.IsNullOrWhiteSpace(userInput))
+                            {
+                                <p class="text-danger mt-2 mb-0 text-center">
+                                    <small><i class="bi bi-exclamation-circle"></i> Please enter a question first</small>
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="text-muted mt-2 mb-0 text-center">
+                                    <small>Click to run with your input</small>
+                                </p>
+                            }
+                        }
+                        else if (isRunning)
+                        {
+                            <div class="text-center">
+                                <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                                    <span class="visually-hidden">Running...</span>
+                                </div>
+                                <h5>Executing Flow...</h5>
+                                <p class="text-muted">Processing: "@currentInputUsed"</p>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" 
+                                         style="width: 100%"></div>
+                                </div>
+                            </div>
+                        }
+                        else if (executionContext != null)
+                        {
+                            <div class="alert alert-@(executionContext.Status == ExecutionStatus.Completed ? "success" : "danger") mb-3">
+                                <h5 class="mb-2">
+                                    @if (executionContext.Status == ExecutionStatus.Completed)
+                                    {
+                                        <i class="bi bi-check-circle"></i> <span>Completed!</span>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-x-circle"></i> <span>Failed</span>
+                                    }
+                                </h5>
+                                <small>
+                                    <i class="bi bi-stopwatch"></i>
+                                    Duration: @((executionContext.EndTime - executionContext.StartTime)?.TotalSeconds.ToString("F2"))s
+                                </small>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" @onclick="RunAgain">
+                                    <i class="bi bi-arrow-clockwise"></i> Run with New Input
+                                </button>
+                                <button class="btn btn-outline-secondary" @onclick="RunSameInput">
+                                    <i class="bi bi-repeat"></i> Run Same Input Again
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Previous Runs History -->
+                @if (executionHistory.Any())
+                {
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-clock-history"></i> History (@executionHistory.Count runs)
+                            </h6>
+                        </div>
+                        <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                            @foreach (var run in executionHistory.Take(10))
+                            {
+                                <div class="mb-2 p-2 border-bottom">
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">@run.Timestamp.ToString("HH:mm:ss")</small>
+                                        <span class="badge bg-@(run.Success ? "success" : "danger")">
+                                            @(run.Success ? "✓" : "✗")
+                                        </span>
+                                    </div>
+                                    <small class="text-truncate d-block">@run.Input</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- 🔥 EXECUTION ORDER CARD - SHOWS BATCHES AND PARALLEL EXECUTION -->
+                @if (executionContext != null && executionContext.ExecutionBatches.Any())
+                {
+                    <div class="card shadow-sm mt-3">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-list-ol"></i> Execution Order
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="execution-flow">
+                                @{
+                                    int nodeCounter = 0;
+                                }
+                                @for (int batchIndex = 0; batchIndex < executionContext.ExecutionBatches.Count; batchIndex++)
+                                {
+                                    var batch = executionContext.ExecutionBatches[batchIndex];
+
+                                    // Filter out skipped nodes (departments with no data)
+                                    var activeBatchNodes = batch.Where(nodeId => {
+                                        var nodeDef = flow?.Nodes.FirstOrDefault(n => n.Id == nodeId);
+                                        var hasOutput = executionContext.NodeOutputs.ContainsKey(nodeId);
+                                        var outputs = hasOutput ? executionContext.NodeOutputs[nodeId] : null;
+                                        var hasData = outputs != null && outputs.Any();
+
+                                        bool isDepartment = nodeDef?.Type?.EndsWith("Department") == true;
+                                        if (isDepartment && !hasData)
+                                        {
+                                            return false;
+                                        }
+
+                                        return true;
+                                    }).ToList();
+
+                                    @if (activeBatchNodes.Any())
+                                    {
+                                        <div class="execution-batch">
+                                            @if (activeBatchNodes.Count == 1)
+                                            {
+                                                <!-- Single node - normal display -->
+                                                <div class="execution-step">
+                                                    <span class="badge bg-primary">@(++nodeCounter)</span>
+                                                    <span class="ms-2">@activeBatchNodes[0]</span>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <!-- Multiple nodes - parallel display -->
+                                                <div class="parallel-batch">
+                                                    <div class="batch-label text-muted mb-2">
+                                                        <small><i class="bi bi-lightning-fill"></i> Parallel Execution</small>
+                                                    </div>
+                                                    <div class="parallel-nodes">
+                                                        @foreach (var nodeId in activeBatchNodes)
+                                                        {
+                                                            <div class="execution-step parallel">
+                                                                <span class="badge bg-primary">@(++nodeCounter)</span>
+                                                                <span class="ms-2">@nodeId</span>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+
+                                        @if (batchIndex < executionContext.ExecutionBatches.Count - 1)
+                                        {
+                                            <div class="execution-arrow">↓</div>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- Right Panel: Results -->
+        <div class="col-md-8">
+            <!-- ✨ NEW: CONVERSATION HISTORY -->
+            @if (conversationMemory != null && (conversationMemory.Messages.Count > 0 || conversationMemory.Summaries.Count > 0))
+            {
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">
+                                <i class="bi bi-chat-dots"></i> Conversation History
+                            </h5>
+                            <span class="badge bg-light text-dark">
+                                @(conversationMemory.Summaries.Count + conversationMemory.Messages.Count) items
+                            </span>
+                        </div>
+                        @* ✨ NEW Phase 3: Token usage indicator *@
+                        <div class="d-flex justify-content-between align-items-center" style="font-size: 0.85rem;">
+                            <div>
+                                <i class="bi bi-speedometer2"></i>
+                                <strong>@conversationMemory.GetEstimatedTokenCount()</strong> / @conversationMemory.TrimThreshold tokens
+                            </div>
+                            @if (conversationMemory.Summaries.Count > 0)
+                            {
+                                <div>
+                                    <i class="bi bi-layers"></i> @conversationMemory.Summaries.Count summary(ies)
+                                </div>
+                            }
+                        </div>
+                        @* ✨ Token usage progress bar *@
+                        <div class="progress mt-2" style="height: 6px;">
+                            @{
+                                var tokenPercentage = (double)conversationMemory.GetEstimatedTokenCount() / conversationMemory.TrimThreshold * 100;
+                                var progressColor = tokenPercentage >= 100 ? "bg-danger" : tokenPercentage >= 80 ? "bg-warning" : "bg-success";
+                            }
+                            <div class="progress-bar @progressColor" role="progressbar"
+                                 style="width: @Math.Min(100, tokenPercentage)%"></div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                        @* ✨ NEW Phase 3: Show summaries first *@
+                        @foreach (var summary in conversationMemory.Summaries)
+                        {
+                            <div class="message-bubble summary-message mb-3">
+                                <div class="message-header">
+                                    <strong>
+                                        <i class="bi bi-collection"></i> Summary
+                                    </strong>
+                                    <small class="text-muted">@summary.Timestamp.ToLocalTime().ToString("HH:mm:ss")</small>
+                                </div>
+                                <div class="message-content">
+                                    @summary.Content
+                                </div>
+                                @* Show summary metadata if available *@
+                                @if (summary.Metadata.ContainsKey("SummarizedMessageCount"))
+                                {
+                                    <div class="message-meta">
+                                        <small class="text-muted">
+                                            <i class="bi bi-info-circle"></i>
+                                            Condensed @summary.Metadata["SummarizedMessageCount"] messages
+                                            @if (summary.Metadata.ContainsKey("TokensSaved"))
+                                            {
+                                                <span> • Saved @summary.Metadata["TokensSaved"] tokens</span>
+                                            }
+                                        </small>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        @* Regular messages *@
+                        @foreach (var message in conversationMemory.Messages)
+                        {
+                            @* ✨ Phase 4: Topic change separator *@
+                            @if (message.IsTopicChange && message.Role == "user")
+                            {
+                                <div class="topic-change-separator mb-3">
+                                    <div class="topic-change-line"></div>
+                                    <div class="topic-change-badge">
+                                        <i class="bi bi-arrow-down-up"></i>
+                                        Topic Change (@(message.GetTopicSimilarity().ToString("P0")) similarity)
+                                    </div>
+                                    <div class="topic-change-line"></div>
+                                </div>
+                            }
+
+                            var isClarification = message.IsClarificationRequest;
+                            var bubbleClass = isClarification ? "clarification-message" :
+                                             message.Role == "user" ? "user-message" : "assistant-message";
+
+                            <div class="message-bubble @bubbleClass mb-3">
+                                <div class="message-header">
+                                    <div>
+                                        <strong>@(message.Role == "user" ? "You" : "Assistant")</strong>
+                                        @* ✨ Phase 5: Show clarification badge *@
+                                        @if (isClarification)
+                                        {
+                                            <span class="badge bg-warning text-dark ms-2">
+                                                <i class="bi bi-question-circle"></i> Needs Clarification
+                                            </span>
+                                        }
+                                        @* ✨ Phase 5: Show confidence badge *@
+                                        @if (message.Role == "assistant" && !isClarification && message.Metadata.ContainsKey("Confidence"))
+                                        {
+                                            var confidence = message.GetConfidence();
+                                            var confidenceColor = ClarificationHandler.GetConfidenceColor(confidence);
+                                            var confidenceLevel = ClarificationHandler.FormatConfidenceLevel(confidence);
+                                            <span class="badge bg-@confidenceColor ms-2">
+                                                <i class="bi bi-speedometer2"></i> @confidence% (@confidenceLevel)
+                                            </span>
+                                        }
+                                        @* ✨ Phase 6: Show PII redaction badge *@
+                                        @if (message.HasPIIRedacted)
+                                        {
+                                            <span class="badge bg-danger ms-2" title="@message.GetPIISummary()">
+                                                <i class="bi bi-shield-lock"></i> PII Redacted (@message.GetPIICount())
+                                            </span>
+                                        }
+                                    </div>
+                                    <small class="text-muted">@message.Timestamp.ToLocalTime().ToString("HH:mm:ss")</small>
+                                </div>
+                                <div class="message-content">
+                                    @message.Content
+                                </div>
+                                @* ✨ Show metadata *@
+                                @if (message.Metadata.Count > 0)
+                                {
+                                    <div class="message-meta">
+                                        <small class="text-muted">
+                                            @if (message.Metadata.ContainsKey("triggeredDepartment"))
+                                            {
+                                                <span>
+                                                    <i class="bi bi-tag"></i> Department: @message.Metadata["triggeredDepartment"]
+                                                </span>
+                                            }
+                                            @* ✨ Phase 4: Show topic similarity for user messages *@
+                                            @if (message.Role == "user" && message.Metadata.ContainsKey("TopicSimilarity"))
+                                            {
+                                                var similarity = message.GetTopicSimilarity();
+                                                var method = message.Metadata.ContainsKey("TopicDetectionMethod")
+                                                    ? message.Metadata["TopicDetectionMethod"]?.ToString()
+                                                    : "unknown";
+                                                <span class="ms-2">
+                                                    <i class="bi bi-graph-up"></i>
+                                                    Similarity: @similarity.ToString("P0") (@method)
+                                                </span>
+                                            }
+                                            @* ✨ Phase 5: Show reasoning *@
+                                            @if (message.Metadata.ContainsKey("Reasoning"))
+                                            {
+                                                var reasoning = message.GetReasoning();
+                                                if (!string.IsNullOrEmpty(reasoning))
+                                                {
+                                                    <span class="ms-2">
+                                                        <i class="bi bi-lightbulb"></i>
+                                                        @reasoning
+                                                    </span>
+                                                }
+                                            }
+                                            @* ✨ NEW: Show search source *@
+                                            @if (message.Metadata.ContainsKey("SearchSource"))
+                                            {
+                                                var searchSource = message.Metadata["SearchSource"]?.ToString();
+                                                var sourceIcon = searchSource switch
+                                                {
+                                                    "KnowledgeBase" => "🏢",
+                                                    "WebSearch" => "🌐",
+                                                    "Hybrid" => "🔄",
+                                                    _ => "🤖"
+                                                };
+                                                <span class="ms-2">
+                                                    <span>@sourceIcon</span>
+                                                    Source: @searchSource
+                                                </span>
+                                            }
+                                            @* ✨ NEW: Show KB confidence *@
+                                            @if (message.Metadata.ContainsKey("KBConfidence"))
+                                            {
+                                                var kbConfidence = float.Parse(message.Metadata["KBConfidence"]?.ToString() ?? "0");
+                                                <span class="ms-2">
+                                                    <i class="bi bi-graph-up"></i>
+                                                    KB Match: @(kbConfidence.ToString("P0"))
+                                                </span>
+                                            }
+                                        </small>
+                                    </div>
+                                }
+                                @* ✨ NEW: Show document references *@
+                                @if (message.Metadata.ContainsKey("InternalSourcesCount") || message.Metadata.ContainsKey("ExternalSourcesCount"))
+                                {
+                                    var internalCount = message.Metadata.ContainsKey("InternalSourcesCount")
+                                        ? int.Parse(message.Metadata["InternalSourcesCount"]?.ToString() ?? "0")
+                                        : 0;
+                                    var externalCount = message.Metadata.ContainsKey("ExternalSourcesCount")
+                                        ? int.Parse(message.Metadata["ExternalSourcesCount"]?.ToString() ?? "0")
+                                        : 0;
+
+                                    @if (internalCount > 0 || externalCount > 0)
+                                    {
+                                        <div class="message-sources mt-2 p-2 bg-light rounded">
+                                            <small><strong><i class="bi bi-link-45deg"></i> Sources:</strong></small>
+                                            @if (internalCount > 0)
+                                            {
+                                                <div class="mt-1">
+                                                    <small class="text-muted">
+                                                        🏢 <strong>Internal:</strong> @internalCount document(s)
+                                                    </small>
+                                                </div>
+                                            }
+                                            @if (externalCount > 0)
+                                            {
+                                                <div class="mt-1">
+                                                    <small class="text-muted">
+                                                        🌐 <strong>External:</strong> @externalCount source(s)
+                                                    </small>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @* ✨ FULL RESULTS CARD - SHOW ALL OUTPUT *@
+            @if (executionContext != null && executionContext.NodeOutputs.Any())
+            {
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-check-circle"></i> Results
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @{
+                            // Find the last department that ran
+                            var lastDepartmentOutput = executionContext.ExecutionOrder
+                                .LastOrDefault(nodeId => {
+                                    var node = flow?.Nodes.FirstOrDefault(n => n.Id == nodeId);
+                                    return node?.Type?.EndsWith("Department") == true &&
+                                           executionContext.NodeOutputs.ContainsKey(nodeId) &&
+                                           executionContext.NodeOutputs[nodeId].ContainsKey("output");
+                                });
+                        }
+
+                        @if (lastDepartmentOutput != null)
+                        {
+                            var outputs = executionContext.NodeOutputs[lastDepartmentOutput];
+
+                            @* Main answer output *@
+                            @if (outputs.ContainsKey("output"))
+                            {
+                                <div class="alert alert-info">
+                                    <h6 class="mb-2">
+                                        <i class="bi bi-chat-quote"></i> Answer:
+                                    </h6>
+                                    <div>@outputs["output"]</div>
+                                </div>
+                            }
+
+                            @* ✨ NEW: Show search metadata *@
+                            @if (outputs.ContainsKey("source") || outputs.ContainsKey("confidence"))
+                            {
+                                <div class="search-metadata p-3 bg-light rounded mb-3">
+                                    <h6 class="mb-2"><i class="bi bi-info-circle"></i> Search Details:</h6>
+
+                                    @if (outputs.ContainsKey("source"))
+                                    {
+                                        var source = outputs["source"]?.ToString();
+                                        var sourceIcon = source switch
+                                        {
+                                            "KnowledgeBase" => "🏢",
+                                            "WebSearch" => "🌐",
+                                            "Hybrid" => "🔄",
+                                            _ => "🤖"
+                                        };
+                                        <div class="mb-2">
+                                            <strong>@sourceIcon Source:</strong>
+                                            <span class="badge bg-primary">@source</span>
+                                        </div>
+                                    }
+
+                                    @if (outputs.ContainsKey("confidence"))
+                                    {
+                                        var confidence = float.Parse(outputs["confidence"]?.ToString() ?? "0");
+                                        <div class="mb-2">
+                                            <strong><i class="bi bi-graph-up"></i> KB Confidence:</strong>
+                                            <span class="badge bg-info">@(confidence.ToString("P0"))</span>
+                                        </div>
+                                    }
+
+                                    @if (outputs.ContainsKey("internalSources"))
+                                    {
+                                        var count = int.Parse(outputs["internalSources"]?.ToString() ?? "0");
+                                        @if (count > 0)
+                                        {
+                                            <div class="mb-2">
+                                                <strong>🏢 Internal Documents:</strong>
+                                                <span class="badge bg-success">@count found</span>
+                                            </div>
+                                        }
+                                    }
+
+                                    @if (outputs.ContainsKey("externalSources"))
+                                    {
+                                        var count = int.Parse(outputs["externalSources"]?.ToString() ?? "0");
+                                        @if (count > 0)
+                                        {
+                                            <div class="mb-2">
+                                                <strong>🌐 External Sources:</strong>
+                                                <span class="badge bg-warning">@count found</span>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (executionContext != null)
+            {
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3>
+                        <i class="bi bi-file-earmark-bar-graph"></i> Latest Execution Results
+                    </h3>
+                    <div class="text-muted">
+                        <small>Input: <strong>"@currentInputUsed"</strong></small>
+                    </div>
+                </div>
+
+                <!-- 🔥 NODE OUTPUTS - ONLY SHOW NODES THAT RAN -->
+                @foreach (var nodeId in executionContext.ExecutionOrder)
+                {
+                    var nodeDef = flow?.Nodes.FirstOrDefault(n => n.Id == nodeId);
+                    var hasOutput = executionContext.NodeOutputs.ContainsKey(nodeId);
+                    var outputs = hasOutput ? executionContext.NodeOutputs[nodeId] : null;
+                    var hasData = outputs != null && outputs.Any();
+
+                    // 🔥 SKIP DEPARTMENTS WITH NO OUTPUT
+                    bool isDepartment = nodeDef?.Type?.EndsWith("Department") == true;
+                    if (isDepartment && !hasData)
+                    {
+                        continue;
+                    }
+
+                    <div class="card shadow-sm mb-3 node-result-card">
+                        <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0 text-white">
+                                    <i class="bi bi-circle-fill"></i> @nodeId
+                                </h5>
+                                @if (nodeDef != null)
+                                {
+                                    <span class="badge bg-light text-dark">@nodeDef.Type</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @if (hasData)
+                            {
+                                @foreach (var kvp in outputs!)
+                                {
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <strong class="text-primary">
+                                                <i class="bi bi-arrow-right-circle"></i> @kvp.Key
+                                            </strong>
+                                        </div>
+                                        <div class="output-box">
+                                            <pre class="mb-0">@kvp.Value</pre>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted mb-0">
+                                    <i class="bi bi-info-circle"></i> No output data
+                                </p>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Errors Section -->
+                @if (executionContext.Errors.Any())
+                {
+                    <div class="card shadow-sm border-danger mb-3">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-exclamation-triangle"></i> Errors
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @foreach (var error in executionContext.Errors)
+                            {
+                                <div class="alert alert-danger mb-2">
+                                    <pre class="mb-0">@error</pre>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else if (!isRunning)
+            {
+                <div class="text-center py-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-play-circle text-muted mb-3" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                    </svg>
+                    <h4 class="text-muted">Ready to Execute</h4>
+                    <p class="text-muted">Enter your question and click "Start Execution"</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .execution-flow {
+        text-align: center;
+    }
+    
+    .execution-step {
+        padding: 8px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        margin: 5px 0;
+    }
+    
+    .execution-arrow {
+        color: #6c757d;
+        font-size: 20px;
+        margin: 5px 0;
+    }
+
+    /* ✨ NEW: Parallel execution visualization */
+    .parallel-batch {
+        background: #e7f3ff;
+        border: 2px dashed #2196f3;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+    }
+
+    .batch-label {
+        text-align: center;
+        font-weight: 600;
+        color: #1976d2 !important;
+    }
+
+    .parallel-nodes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .execution-step.parallel {
+        background: #ffffff;
+        border: 2px solid #2196f3;
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+    }
+
+    .output-box {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 15px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .output-box pre {
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    
+    .node-result-card {
+        transition: transform 0.2s;
+    }
+    
+    .node-result-card:hover {
+        transform: translateX(5px);
+    }
+
+    /* ✨ NEW: Conversation Message Bubbles */
+    .message-bubble {
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+    .user-message {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+    }
+
+    .assistant-message {
+        background: #f1f8e9;
+        border-left: 4px solid #8bc34a;
+    }
+
+    /* ✨ NEW Phase 3: Summary message styling */
+    .summary-message {
+        background: #fff8e1;
+        border-left: 4px solid #ffa726;
+        border: 2px dashed #ffa726;
+    }
+
+    .summary-message .message-header {
+        color: #f57c00;
+    }
+
+    .summary-message .message-content {
+        font-style: italic;
+        color: #555;
+    }
+
+    /* ✨ Phase 4: Topic change separator styling */
+    .topic-change-separator {
+        display: flex;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .topic-change-line {
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #ff9800, transparent);
+    }
+
+    .topic-change-badge {
+        padding: 6px 16px;
+        background: #fff3e0;
+        border: 2px solid #ff9800;
+        border-radius: 20px;
+        color: #f57c00;
+        font-weight: bold;
+        font-size: 12px;
+        white-space: nowrap;
+        margin: 0 12px;
+    }
+
+    /* ✨ Phase 5: Clarification message styling */
+    .clarification-message {
+        background: #fffbf0;
+        border: 2px solid #ffc107;
+        border-left: 6px solid #ffc107;
+        box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
+    }
+
+    .clarification-message .message-header {
+        color: #856404;
+    }
+
+    .clarification-message .message-content {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .message-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+
+    .message-content {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        line-height: 1.5;
+    }
+
+    .message-meta {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string? FlowId { get; set; }
+
+    [Parameter]
+    public string? ConversationId { get; set; }
+
+    private Flow? flow;
+    private ExecutionContext? executionContext;
+    private bool isRunning = false;
+    private string? errorMessage;
+
+    // 🆕 DYNAMIC INPUT
+    private string userInput = "";
+    private string currentInputUsed = "";
+
+    // 🆕 EXECUTION HISTORY
+    private List<ExecutionRun> executionHistory = new();
+
+    // ✨ NEW: CONVERSATION MEMORY (now managed by IConversationStore)
+    // Loaded from store on initialization
+    // Automatically saved after each message
+    private ConversationMemory? conversationMemory;
+
+    // ✨ Phase 6: PII REDACTION CONFIGURATION
+    // Enable automatic PII detection and redaction
+    private bool enablePIIRedaction = true;
+    private RedactionStrategy piiRedactionStrategy = RedactionStrategy.Mask;
+
+    private class ExecutionRun
+    {
+        public DateTime Timestamp { get; set; }
+        public string Input { get; set; } = "";
+        public bool Success { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(FlowId))
+        {
+            try
+            {
+                // Load flow
+                flow = Storage.LoadFlow(FlowId);
+
+                // Set default input from first Input node if exists
+                var inputNode = flow.Nodes.FirstOrDefault(n => n.Type == "Input");
+                if (inputNode != null && inputNode.Config.ContainsKey("text"))
+                {
+                    userInput = inputNode.Config["text"]?.ToString() ?? "";
+                }
+
+                Console.WriteLine($"✅ Flow loaded: {flow.Name}");
+
+                // ✨ NEW: Load or create conversation
+                if (!string.IsNullOrEmpty(ConversationId))
+                {
+                    // Load existing conversation
+                    conversationMemory = ConversationStore.Load(ConversationId);
+                    if (conversationMemory == null)
+                    {
+                        // Conversation ID was provided but doesn't exist - create new
+                        conversationMemory = ConversationStore.CreateNew();
+                        Console.WriteLine($"⚠️ Conversation {ConversationId} not found, created new: {conversationMemory.ConversationId}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"✅ Loaded existing conversation: {conversationMemory.ConversationId} ({conversationMemory.Messages.Count} messages)");
+                    }
+                }
+                else
+                {
+                    // No conversation ID provided - create new conversation
+                    conversationMemory = ConversationStore.CreateNew();
+                    Console.WriteLine($"✨ Created new conversation: {conversationMemory.ConversationId}");
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Error loading flow: {ex.Message}";
+            }
+        }
+    }
+
+    private async Task StartExecution()
+    {
+        if (flow == null || string.IsNullOrWhiteSpace(userInput)) return;
+
+        isRunning = true;
+        executionContext = null;
+        errorMessage = null;
+        currentInputUsed = userInput.Trim();
+        
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(100);
+
+        try
+        {
+            if (conversationMemory == null)
+            {
+                errorMessage = "Conversation not initialized";
+                return;
+            }
+
+            // ✨ STEP 1: Detect topic continuity (Phase 4)
+            // This helps identify if user is switching topics
+            var topicMetadata = new Dictionary<string, object>();
+
+            // Get API key for topic detection (same as orchestrator)
+            var orchestratorNode = flow?.Nodes.FirstOrDefault(n => n.Type == "Orchestrator");
+            if (orchestratorNode != null && orchestratorNode.Config.ContainsKey("apiKey"))
+            {
+                var apiKey = orchestratorNode.Config["apiKey"]?.ToString();
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    try
+                    {
+                        var topicDetector = new TopicContinuityDetector(apiKey);
+                        var recentMessages = conversationMemory.GetRecentMessages(5);
+                        var topicResult = await topicDetector.DetectContinuityAsync(currentInputUsed, recentMessages);
+
+                        // Store topic metadata
+                        topicMetadata["TopicSimilarity"] = topicResult.SimilarityScore;
+                        topicMetadata["IsTopicChange"] = topicResult.IsTopicChange;
+                        topicMetadata["TopicDetectionMethod"] = topicResult.DetectionMethod;
+
+                        Console.WriteLine($"[FlowRunner] 🎯 Topic continuity: {topicResult.SimilarityScore:P0} ({topicResult.DetectionMethod}) - {topicResult.Reason}");
+
+                        if (topicResult.IsTopicChange)
+                        {
+                            Console.WriteLine($"[FlowRunner] 🔄 Topic change detected!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[FlowRunner] ⚠️ Topic detection failed: {ex.Message}");
+                    }
+                }
+            }
+
+            // ✨ STEP 2: PII Detection and Redaction (Phase 6)
+            var messageContent = currentInputUsed;
+            if (enablePIIRedaction && PIIRedactor.ShouldRedact("user", enablePIIRedaction))
+            {
+                var redactionResult = PIIRedactor.RedactPII(currentInputUsed, piiRedactionStrategy, enablePIIRedaction);
+
+                if (redactionResult.RedactionApplied)
+                {
+                    // Use redacted content
+                    messageContent = redactionResult.RedactedText;
+
+                    // Add PII metadata
+                    topicMetadata["PIIRedacted"] = true;
+                    topicMetadata["PIICount"] = redactionResult.DetectedPII.Count;
+                    topicMetadata["RedactionStrategy"] = piiRedactionStrategy.ToString();
+                    topicMetadata["RedactionSummary"] = redactionResult.GetSummary();
+
+                    var piiTypes = redactionResult.DetectedPII.Select(p => p.Type.ToString()).Distinct().ToList();
+                    topicMetadata["PIITypes"] = string.Join(", ", piiTypes);
+
+                    Console.WriteLine($"[FlowRunner] 🔒 {redactionResult.GetSummary()}");
+                }
+            }
+
+            // ✨ STEP 3: Add user message to conversation history BEFORE execution
+            var userMessage = new ConversationMessage
+            {
+                Role = "user",
+                Content = messageContent,  // Use potentially redacted content
+                Timestamp = DateTime.UtcNow,
+                Metadata = topicMetadata  // Include topic + PII metadata
+            };
+            ConversationStore.Append(conversationMemory.ConversationId, userMessage);
+
+            // Reload conversation to get updated message count
+            conversationMemory = ConversationStore.Load(conversationMemory.ConversationId);
+            Console.WriteLine($"💬 Added user message to conversation (total messages: {conversationMemory?.Messages.Count ?? 0})");
+
+            // ✨ STEP 4: UPDATE THE INPUT NODE WITH USER'S INPUT
+            var flowCopy = CloneFlow(flow);
+            var inputNode = flowCopy.Nodes.FirstOrDefault(n => n.Type == "Input");
+            if (inputNode != null)
+            {
+                inputNode.Config["text"] = currentInputUsed;
+            }
+
+            // ✨ STEP 5: Execute flow WITH conversation memory
+            Console.WriteLine($"🚀 Executing with input: {currentInputUsed}");
+            executionContext = await Orchestrator.ExecuteFlowAsync(flowCopy, 3, conversationMemory);
+
+            // ✨ STEP 6: Add assistant response to conversation AFTER execution
+            if (executionContext.Status == ExecutionStatus.Completed)
+            {
+                // ✨ Phase 5: Check if orchestrator requested clarification
+                ConversationMessage? assistantMessage = null;
+
+                if (executionContext.NodeOutputs.ContainsKey("orchestrator1"))
+                {
+                    var orchOutputs = executionContext.NodeOutputs["orchestrator1"];
+
+                    // Check if clarification is needed
+                    var clarificationRequest = ClarificationHandler.CheckNeedsClarification(orchOutputs);
+
+                    if (clarificationRequest != null)
+                    {
+                        // Clarification needed - create clarification message
+                        Console.WriteLine($"[FlowRunner] ❓ Clarification needed (confidence: {clarificationRequest.Confidence}%)");
+                        assistantMessage = ClarificationHandler.CreateClarificationMessage(clarificationRequest);
+                    }
+                    else
+                    {
+                        // Normal flow - get output from departments
+                        var finalOutput = GetFinalOutput(executionContext);
+
+                        if (!string.IsNullOrEmpty(finalOutput))
+                        {
+                            // Store metadata from orchestrator
+                            var metadata = new Dictionary<string, object>();
+
+                            if (orchOutputs.ContainsKey("targets"))
+                            {
+                                metadata["triggeredDepartment"] = orchOutputs["targets"]?.ToString() ?? "";
+                            }
+
+                            // ✨ Phase 5: Add confidence and reasoning
+                            if (orchOutputs.ContainsKey("confidence"))
+                            {
+                                metadata["Confidence"] = orchOutputs["confidence"];
+                            }
+
+                            if (orchOutputs.ContainsKey("reasoning"))
+                            {
+                                metadata["Reasoning"] = orchOutputs["reasoning"]?.ToString() ?? "";
+                            }
+
+                            // ✨ NEW: Add search metadata from Search Department
+                            var searchDeptId = "search1";
+                            if (executionContext.NodeOutputs.ContainsKey(searchDeptId))
+                            {
+                                var searchOutputs = executionContext.NodeOutputs[searchDeptId];
+
+                                if (searchOutputs.ContainsKey("source"))
+                                {
+                                    metadata["SearchSource"] = searchOutputs["source"]?.ToString() ?? "";
+                                }
+
+                                if (searchOutputs.ContainsKey("confidence"))
+                                {
+                                    metadata["KBConfidence"] = searchOutputs["confidence"]?.ToString() ?? "0";
+                                }
+
+                                if (searchOutputs.ContainsKey("internalSources"))
+                                {
+                                    metadata["InternalSourcesCount"] = searchOutputs["internalSources"]?.ToString() ?? "0";
+                                }
+
+                                if (searchOutputs.ContainsKey("externalSources"))
+                                {
+                                    metadata["ExternalSourcesCount"] = searchOutputs["externalSources"]?.ToString() ?? "0";
+                                }
+                            }
+
+                            assistantMessage = new ConversationMessage
+                            {
+                                Role = "assistant",
+                                Content = finalOutput,
+                                Timestamp = DateTime.UtcNow,
+                                Metadata = metadata
+                            };
+                        }
+                    }
+                }
+                else
+                {
+                    // No orchestrator - just get final output
+                    var finalOutput = GetFinalOutput(executionContext);
+                    if (!string.IsNullOrEmpty(finalOutput))
+                    {
+                        assistantMessage = new ConversationMessage
+                        {
+                            Role = "assistant",
+                            Content = finalOutput,
+                            Timestamp = DateTime.UtcNow
+                        };
+                    }
+                }
+
+                // Save assistant message if we have one
+                if (assistantMessage != null)
+                {
+                    ConversationStore.Append(conversationMemory.ConversationId, assistantMessage);
+
+                    // Reload conversation
+                    conversationMemory = ConversationStore.Load(conversationMemory.ConversationId);
+                    Console.WriteLine($"💬 Added assistant response to conversation (total messages: {conversationMemory?.Messages.Count ?? 0})");
+
+                    // ✨ Phase 3: Check if conversation needs trimming
+                    if (conversationMemory != null && conversationMemory.NeedsTrimming())
+                    {
+                        Console.WriteLine($"[FlowRunner] ⚠️ Conversation needs trimming! Current tokens: {conversationMemory.GetEstimatedTokenCount()} / {conversationMemory.TrimThreshold}");
+                        await TrimConversationAsync(conversationMemory);
+                    }
+                }
+            }
+
+            // Add to history
+            executionHistory.Insert(0, new ExecutionRun
+            {
+                Timestamp = DateTime.Now,
+                Input = currentInputUsed,
+                Success = executionContext.Status == ExecutionStatus.Completed
+            });
+            
+            Console.WriteLine($"✅ Execution completed: {executionContext.Status}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Execution error: {ex.Message}";
+            executionHistory.Insert(0, new ExecutionRun
+            {
+                Timestamp = DateTime.Now,
+                Input = currentInputUsed,
+                Success = false
+            });
+        }
+        finally
+        {
+            isRunning = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void RunAgain()
+    {
+        executionContext = null;
+        errorMessage = null;
+        // Keep the userInput so they can modify it
+    }
+    
+    private async Task RunSameInput()
+    {
+        // Run with the same input again
+        await StartExecution();
+    }
+
+    private Flow CloneFlow(Flow original)
+    {
+        // Simple clone - in production, use proper deep cloning
+        return new Flow
+        {
+            Id = original.Id,
+            Name = original.Name,
+            Nodes = original.Nodes.Select(n => new NodeDefinition
+            {
+                Id = n.Id,
+                Type = n.Type,
+                Config = new Dictionary<string, object>(n.Config),
+                Condition = n.Condition
+            }).ToList(),
+            Edges = original.Edges.Select(e => new Edge
+            {
+                From = e.From,
+                To = e.To,
+                FromOutput = e.FromOutput,
+                ToInput = e.ToInput,
+                Condition = e.Condition  // ✅ FIX: Copy the condition field!
+            }).ToList(),
+            CreatedAt = original.CreatedAt,
+            UpdatedAt = original.UpdatedAt
+        };
+    }
+
+    // ✨ NEW: Extract final output from execution context
+    // This gets the formatted response that will be added to conversation memory
+    private string GetFinalOutput(ExecutionContext context)
+    {
+        // Priority 1: Try to get output from FormatterNode
+        if (context.NodeOutputs.ContainsKey("formatter1"))
+        {
+            var formatterOutputs = context.NodeOutputs["formatter1"];
+            if (formatterOutputs.ContainsKey("output"))
+            {
+                return formatterOutputs["output"]?.ToString() ?? "";
+            }
+        }
+
+        // Priority 2: Try to get output from any department node that ran
+        var departmentTypes = new[] { "search1", "data1", "function1", "image1" };
+        foreach (var deptId in departmentTypes)
+        {
+            if (context.NodeOutputs.ContainsKey(deptId))
+            {
+                var deptOutputs = context.NodeOutputs[deptId];
+                if (deptOutputs.ContainsKey("output") && deptOutputs["output"] != null)
+                {
+                    var output = deptOutputs["output"]?.ToString() ?? "";
+                    if (!string.IsNullOrEmpty(output))
+                    {
+                        return output;
+                    }
+                }
+            }
+        }
+
+        // Priority 3: Fallback to any node with "output"
+        foreach (var nodeOutput in context.NodeOutputs.Values)
+        {
+            if (nodeOutput.ContainsKey("output") && nodeOutput["output"] != null)
+            {
+                var output = nodeOutput["output"]?.ToString() ?? "";
+                if (!string.IsNullOrEmpty(output))
+                {
+                    return output;
+                }
+            }
+        }
+
+        return "";
+    }
+
+    // ✨ NEW Phase 3: Automatically trim conversation when token budget is exceeded
+    private async Task TrimConversationAsync(ConversationMemory conversation)
+    {
+        try
+        {
+            Console.WriteLine($"[FlowRunner] 🔄 Starting conversation trimming...");
+
+            // Get messages that need to be summarized
+            var messagesToSummarize = conversation.GetMessagesToSummarize();
+            if (messagesToSummarize.Count == 0)
+            {
+                Console.WriteLine($"[FlowRunner] ⚠️ No messages to summarize");
+                return;
+            }
+
+            Console.WriteLine($"[FlowRunner] 📝 Summarizing {messagesToSummarize.Count} messages...");
+
+            // Get API key from orchestrator node (needed for OpenAI summarization)
+            var orchestratorNode = flow?.Nodes.FirstOrDefault(n => n.Type == "Orchestrator");
+            if (orchestratorNode == null || !orchestratorNode.Config.ContainsKey("apiKey"))
+            {
+                Console.WriteLine($"[FlowRunner] ❌ Cannot trim: No orchestrator node or API key not found");
+                return;
+            }
+
+            var apiKey = orchestratorNode.Config["apiKey"]?.ToString();
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                Console.WriteLine($"[FlowRunner] ❌ Cannot trim: API key is empty");
+                return;
+            }
+
+            // Create summarizer and generate summary
+            var summarizer = new ConversationSummarizer(apiKey);
+            var summary = await summarizer.SummarizeAsync(messagesToSummarize);
+
+            Console.WriteLine($"[FlowRunner] ✅ Summary generated: {summary.Substring(0, Math.Min(100, summary.Length))}...");
+
+            // Apply the trim (moves old messages to Summaries list, keeps recent messages)
+            conversation.Trim(summary);
+
+            // Save the updated conversation
+            ConversationStore.Save(conversation);
+
+            Console.WriteLine($"[FlowRunner] 💾 Trimmed conversation saved");
+            Console.WriteLine($"[FlowRunner] 📊 New state: {conversation.Summaries.Count} summaries, {conversation.Messages.Count} messages, {conversation.GetEstimatedTokenCount()} tokens");
+
+            // Reload to ensure UI is in sync
+            conversationMemory = ConversationStore.Load(conversation.ConversationId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[FlowRunner] ❌ Error during trimming: {ex.Message}");
+            // Don't throw - trimming is an optimization, not critical
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/flows");
+    }
+}

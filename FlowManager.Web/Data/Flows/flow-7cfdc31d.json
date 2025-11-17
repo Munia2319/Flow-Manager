@@ -1,0 +1,55 @@
+{
+  "id": "flow-7cfdc31d",
+  "name": "Sentimental analyser",
+  "description": "",
+  "tenantId": "default",
+  "nodes": [
+    {
+      "id": "input1",
+      "type": "Input",
+      "config": {
+        "text": "Your question here"
+      },
+      "condition": null
+    },
+    {
+      "id": "formatter1",
+      "type": "Formatter",
+      "config": {
+        "apiKey": "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"
+      },
+      "condition": null
+    },
+    {
+      "id": "openaichat1",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "You are a sentiment classifier.\nReturn only one label: Positive, Neutral, or Negative.\nDo not explain. Output only the label.\n",
+        "model": "gpt-4o-mini",
+        "temperature": 0,
+        "maxTokens": 2000
+      },
+      "condition": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "input1",
+      "to": "openaichat1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "openaichat1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    }
+  ],
+  "createdAt": "2025-11-14T09:58:56.9726764Z",
+  "updatedAt": "2025-11-14T10:01:58.817413Z",
+  "lastModified": "2025-11-14T10:01:58.8174145Z"
+}

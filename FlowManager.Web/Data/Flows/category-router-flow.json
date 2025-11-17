@@ -1,0 +1,123 @@
+{
+  "id": "category-router-flow",
+  "name": "Category Router Flow",
+  "description": "Routes queries to specialized handlers based on category with parallel execution",
+  "tenantId": "default",
+  "nodes": [
+    {
+      "id": "input1",
+      "type": "Input",
+      "config": {
+        "text": "{{userInput}}"
+      },
+      "condition": null
+    },
+    {
+      "id": "classifier1",
+      "type": "Orchestrator",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.3,
+        "systemPrompt": "You are a query classifier. Analyze the user message and identify relevant categories. CRITICAL RULES: (1) A query can have MULTIPLE categories if it covers multiple specific topics. (2) ONLY use \u0027general\u0027 if the query does NOT fit into tech or billing at all. (3) If ANY part of the query is about tech or billing, do NOT include \u0027general\u0027. Categories: \u0027tech\u0027 = VPN, email, software, hardware, technical issues, troubleshooting. \u0027billing\u0027 = payments, charges, invoices, refunds, pricing, subscription issues. \u0027general\u0027 = ONLY for non-specific questions like business hours, contact info, feedback, greetings - NOT for any tech or billing questions. EXAMPLES: Query \u0027My VPN is broken and I was charged twice\u0027 = tech AND billing (NOT general). Query \u0027VPN not working\u0027 = tech only. Query \u0027What are your business hours\u0027 = general only. Query \u0027I need help\u0027 = general only (too vague). Return ONLY valid JSON: {\u0022Action\u0022: \u0022DepartmentHandoff\u0022, \u0022Pipeline\u0022: [{\u0022Target\u0022: \u0022tech\u0022}]} or {\u0022Action\u0022: \u0022DepartmentHandoff\u0022, \u0022Pipeline\u0022: [{\u0022Target\u0022: \u0022tech\u0022}, {\u0022Target\u0022: \u0022billing\u0022}]} etc."
+      },
+      "condition": null
+    },
+    {
+      "id": "tech1",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.7,
+        "systemPrompt": "You are a technical support specialist. Address ONLY the technical issues in the user query like VPN, email, software, hardware. Provide clear troubleshooting steps. Start your response with Technical Support:"
+      },
+      "condition": null
+    },
+    {
+      "id": "billing1",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.7,
+        "systemPrompt": "You are a billing support specialist. Address ONLY the billing or payment issues in the user query. Be clear about next steps for billing problems. Start your response with Billing Support:"
+      },
+      "condition": null
+    },
+    {
+      "id": "general1",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.7,
+        "systemPrompt": "You are a general information assistant. Address ONLY the general information requests in the user query. Be helpful and friendly. Start your response with General Information:"
+      },
+      "condition": null
+    },
+    {
+      "id": "formatter1",
+      "type": "Formatter",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "You are a response formatter. Combine outputs from different support departments into ONE clear organized response. Use section headers to distinguish between departments. If tech output exists show under Technical Support. If billing output exists show under Billing Support. If general output exists show under General Information. Remove any redundancy and present a cohesive answer. Keep the original section headers from each department."
+      },
+      "condition": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "input1",
+      "to": "classifier1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "classifier1",
+      "to": "tech1",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{classifier1.targets}} contains \u0027tech\u0027"
+    },
+    {
+      "from": "classifier1",
+      "to": "billing1",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{classifier1.targets}} contains \u0027billing\u0027"
+    },
+    {
+      "from": "classifier1",
+      "to": "general1",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{classifier1.targets}} contains \u0027general\u0027"
+    },
+    {
+      "from": "tech1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "tech",
+      "condition": null
+    },
+    {
+      "from": "billing1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "billing",
+      "condition": null
+    },
+    {
+      "from": "general1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "general",
+      "condition": null
+    }
+  ],
+  "createdAt": "2025-11-13T16:00:00Z",
+  "updatedAt": "2025-11-14T12:16:48.3463161Z",
+  "lastModified": "2025-11-14T12:16:48.3463172Z"
+}

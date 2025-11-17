@@ -1,0 +1,91 @@
+{
+  "id": "flow-8c25ed31",
+  "name": "Search and Extraction Flow",
+  "description": "Type Tests both search and product extraction",
+  "tenantId": "default",
+  "nodes": [
+    {
+      "id": "input1",
+      "type": "Input",
+      "config": {
+        "text": "Your question here"
+      },
+      "condition": null
+    },
+    {
+      "id": "orchestrator1",
+      "type": "Orchestrator",
+      "config": {
+        "apiKey": "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",
+        "temperature": 0.7,
+        "maxTokens": 2000
+      },
+      "condition": null
+    },
+    {
+      "id": "search1",
+      "type": "SearchDepartment",
+      "config": {
+        "apiKey": "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"
+      },
+      "condition": "{{orchestrator1.targets}} contains 'Search'"
+    },
+    {
+      "id": "function1",
+      "type": "FunctionDepartment",
+      "config": {
+        "apiKey": "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"
+      },
+      "condition": "{{orchestrator1.targets}} contains 'Function'"
+    },
+    {
+      "id": "formatter1",
+      "type": "Formatter",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "You are a response formatter that combines outputs from multiple specialized departments. CRITICAL RULES: (1) TRUST EACH DEPARTMENT - If Function extracted data, it is CORRECT even if Search could not find it. (2) CLEAR SEPARATION - Use section headers: Use Information or Search Results for Search department. Use Extracted Product Code or Extracted Data for Function department. Use Data Analysis for Data department. Use Image Analysis for Image department. (3) PRIORITIZE SUCCESS - Highlight successful extractions prominently. (4) HANDLE CONFLICTS - If Search says could not find product code ABC-123 but Function outputs ABC-123, IGNORE the Search statement about the code and show Extracted Product Code: ABC-123. Remove any could not find statements that contradict successful extractions. Each department handles different tasks so trust their specialized results. (5) BE CONCISE - Remove redundancy. Do not repeat the same information from multiple departments. EXAMPLES: Example 1: If Search says Battery info but could not find ABC-123 and Function says ABC-123, output Battery Safety Information with the battery info and Extracted Product Code: ABC-123. Example 2: If only Search outputs forklift safety info, output Forklift Safety with the information. Example 3: If only Function outputs PLT-9384-XYZ, output Extracted Product Code: PLT-9384-XYZ. Now format the following outputs."
+      },
+      "condition": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "function1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "function",
+      "condition": null
+    },
+    {
+      "from": "input1",
+      "to": "orchestrator1",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "orchestrator1",
+      "to": "search1",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{orchestrator1.targets}} contains 'Search'"
+    },
+    {
+      "from": "orchestrator1",
+      "to": "function1",
+      "fromOutput": "query",
+      "toInput": "input",
+      "condition": "{{orchestrator1.targets}} contains 'Function'"
+    },
+    {
+      "from": "search1",
+      "to": "formatter1",
+      "fromOutput": "output",
+      "toInput": "search",
+      "condition": null
+    }
+  ],
+  "createdAt": "2025-11-13T12:06:36.3454465Z",
+  "updatedAt": "2025-11-13T12:12:34.17665Z",
+  "lastModified": "2025-11-13T12:12:34.1766515Z"
+}

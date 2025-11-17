@@ -1,0 +1,434 @@
+@rendermode InteractiveServer
+@page "/flows"
+@using FlowManager.Core.Models
+@using FlowManager.Core.Services
+@inject FlowStorageService Storage
+@inject NavigationManager Navigation
+@inject IConfiguration Configuration
+
+<PageTitle>Flow Manager - My Flows</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>🔄 Flow Manager</h1>
+            <p class="text-muted">Manage your AI workflow automations</p>
+        </div>
+        <button class="btn btn-primary btn-lg" @onclick="CreateNewFlow">
+            <i class="bi bi-plus-circle"></i> Create New Flow
+        </button>
+    </div>
+
+    @if (flows == null)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Loading flows...</p>
+        </div>
+    }
+    else if (flows.Count == 0)
+    {
+        <div class="text-center py-5">
+            <div class="card shadow-lg" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-diagram-3 text-muted" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5v-1zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1zM0 11.5A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm4.5.5A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
+                        </svg>
+                    </div>
+                    <h3>No flows yet!</h3>
+                    <p class="text-muted">Create your first AI workflow to get started with automated multi-department routing.</p>
+                    <button class="btn btn-primary btn-lg mt-3" @onclick="CreateNewFlow">
+                        <i class="bi bi-plus-circle"></i> Create Your First Flow
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mb-3">
+            <span class="badge bg-primary">@flows.Count Flow@(flows.Count != 1 ? "s" : "")</span>
+        </div>
+        
+        <div class="row">
+            @foreach (var flow in flows)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="mb-3 pb-3 border-bottom">
+                                <h5 class="card-title mb-1">
+                                    <i class="bi bi-diagram-3 text-primary"></i>
+                                    <strong>@(string.IsNullOrWhiteSpace(flow.Name) ? "Untitled Flow" : flow.Name)</strong>
+                                </h5>
+                                @if (!string.IsNullOrWhiteSpace(flow.Description))
+                                {
+                                    <p class="text-muted small mb-0">@flow.Description</p>
+                                }
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">
+                                        <i class="bi bi-circle-fill text-primary"></i> Nodes
+                                    </span>
+                                    <strong>@flow.Nodes.Count</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">
+                                        <i class="bi bi-arrow-left-right text-success"></i> Edges
+                                    </span>
+                                    <strong>@flow.Edges.Count</strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">
+                                        <i class="bi bi-clock-history"></i> Created
+                                    </span>
+                                    <small>@flow.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy")</small>
+                                </div>
+                            </div>
+                            
+                            @if (flow.UpdatedAt > flow.CreatedAt)
+                            {
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-pencil"></i> Updated: @flow.UpdatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")
+                                    </small>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer bg-light">
+                            <div class="d-grid gap-2">
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-success" @onclick="() => RunFlow(flow.Id)">
+                                        <i class="bi bi-play-fill"></i> Run
+                                    </button>
+                                    <button class="btn btn-primary" @onclick="() => EditFlow(flow.Id)">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </button>
+                                    <button class="btn btn-outline-danger" @onclick="() => ConfirmDelete(flow)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@* Delete Confirmation Modal *@
+@if (flowToDelete != null)
+{
+    <div class="modal show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle"></i> Confirm Deletion
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="CancelDelete"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the flow:</p>
+                    <p class="fw-bold">"@flowToDelete.Name"</p>
+                    <p class="text-muted">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CancelDelete">Cancel</button>
+                    <button type="button" 
+                            class="btn btn-danger" 
+                            @onclick="ConfirmDeleteFlow"
+                            disabled="@isDeleting">
+                        @if (isDeleting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                        }
+                        <i class="bi bi-trash"></i> Delete Flow
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .hover-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2) !important;
+    }
+    
+    .bg-gradient {
+        color: white;
+    }
+</style>
+
+@code {
+    private List<Flow>? flows;
+    private Flow? flowToDelete;
+    private string? errorMessage;
+    private bool isDeleting = false;
+
+    protected override void OnInitialized()
+    {
+        LoadFlows();
+    }
+
+    private void LoadFlows()
+    {
+        try
+        {
+            flows = Storage.ListFlows();
+            Console.WriteLine($"✅ Loaded {flows?.Count ?? 0} flows");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading flows: {ex.Message}";
+            Console.WriteLine($"❌ Error loading flows: {ex.Message}");
+            flows = new List<Flow>();
+        }
+    }
+
+    private void CreateNewFlow()
+    {
+        try
+        {
+            var apiKey = Configuration["KnowledgeBase:OpenAIApiKey"] ?? throw new Exception("OpenAI API key not configured in appsettings.json");
+            
+            var newFlow = new Flow
+            {
+                Id = $"flow-{Guid.NewGuid().ToString().Substring(0, 8)}",
+                Name = "New Flow",
+                Description = "",
+                TenantId = "default",
+                Nodes = new List<NodeDefinition>
+                {
+                    new NodeDefinition
+                    {
+                        Id = "input1",
+                        Type = "Input",
+                        Config = new Dictionary<string, object>
+                        {
+                            ["text"] = "Your question here"
+                        },
+                        Condition = null
+                    },
+                    new NodeDefinition
+                    {
+                        Id = "orchestrator1",
+                        Type = "Orchestrator",
+                        Config = new Dictionary<string, object>
+                        {
+                            ["apiKey"] = apiKey
+                        },
+                        Condition = null
+                    },
+                    new NodeDefinition
+                    {
+                        Id = "search1",
+                        Type = "SearchDepartment",
+                        Config = new Dictionary<string, object>
+                        {
+                            ["apiKey"] = apiKey
+                        },
+                        Condition = "{{orchestrator1.targets}} contains 'Search'"
+                    },
+                    new NodeDefinition
+                    {
+                        Id = "data1",
+                        Type = "DataDepartment",
+                        Config = new Dictionary<string, object>
+                        {
+                            ["apiKey"] = apiKey
+                        },
+                        Condition = "{{orchestrator1.targets}} contains 'Data'"
+                    },
+                    new NodeDefinition
+                    {
+                        Id = "function1",
+                        Type = "FunctionDepartment",
+                        Config = new Dictionary<string, object>
+                        {
+                            ["apiKey"] = apiKey
+                        },
+                        Condition = "{{orchestrator1.targets}} contains 'Function'"
+                    },
+                    new NodeDefinition
+                    {
+                        Id = "image1",
+                        Type = "ImageDepartment",
+                        Config = new Dictionary<string, object>
+                        {
+                            ["apiKey"] = apiKey,
+                            ["imageUrl"] = ""
+                        },
+                        Condition = "{{orchestrator1.targets}} contains 'Image'"
+                    },
+                    new NodeDefinition
+                    {
+                        Id = "formatter1",
+                        Type = "Formatter",
+                        Config = new Dictionary<string, object>
+                        {
+                            ["apiKey"] = apiKey
+                        },
+                        Condition = null
+                    }
+                },
+                Edges = new List<Edge>
+                {
+                    new Edge 
+                    { 
+                        From = "input1", 
+                        To = "orchestrator1",
+                        FromOutput = "output",
+                        ToInput = "input"
+                    },
+                    new Edge 
+                    { 
+                        From = "input1", 
+                        To = "search1",
+                        FromOutput = "output",
+                        ToInput = "input"
+                    },
+                    new Edge 
+                    { 
+                        From = "input1", 
+                        To = "data1",
+                        FromOutput = "output",
+                        ToInput = "input"
+                    },
+                    new Edge 
+                    { 
+                        From = "input1", 
+                        To = "function1",
+                        FromOutput = "output",
+                        ToInput = "input"
+                    },
+                    new Edge 
+                    { 
+                        From = "input1", 
+                        To = "image1",
+                        FromOutput = "output",
+                        ToInput = "input"
+                    },
+                    new Edge 
+                    { 
+                        From = "search1", 
+                        To = "formatter1",
+                        FromOutput = "output",
+                        ToInput = "search"
+                    },
+                    new Edge 
+                    { 
+                        From = "data1", 
+                        To = "formatter1",
+                        FromOutput = "output",
+                        ToInput = "data"
+                    },
+                    new Edge 
+                    { 
+                        From = "function1", 
+                        To = "formatter1",
+                        FromOutput = "output",
+                        ToInput = "function"
+                    },
+                    new Edge 
+                    { 
+                        From = "image1", 
+                        To = "formatter1",
+                        FromOutput = "output",
+                        ToInput = "image"
+                    }
+                },
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                LastModified = DateTime.UtcNow
+            };
+            
+            Storage.SaveFlow(newFlow);
+            Navigation.NavigateTo($"/flows/edit/{newFlow.Id}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error creating flow: {ex.Message}";
+            Console.WriteLine($"❌ Error creating flow: {ex.Message}");
+        }
+    }
+
+    private void EditFlow(string? flowId)
+    {
+        if (!string.IsNullOrEmpty(flowId))
+        {
+            Navigation.NavigateTo($"/flows/edit/{flowId}");
+        }
+    }
+
+    private void RunFlow(string? flowId)
+    {
+        if (!string.IsNullOrEmpty(flowId))
+        {
+            Navigation.NavigateTo($"/flows/run/{flowId}");
+        }
+    }
+
+    private void ConfirmDelete(Flow flow)
+    {
+        flowToDelete = flow;
+        errorMessage = null;
+    }
+
+    private void CancelDelete()
+    {
+        flowToDelete = null;
+        errorMessage = null;
+    }
+
+    private async Task ConfirmDeleteFlow()
+    {
+        if (flowToDelete == null || string.IsNullOrEmpty(flowToDelete.Id))
+        {
+            return;
+        }
+
+        isDeleting = true;
+        
+        try
+        {
+            Console.WriteLine($"🗑️ Attempting to delete flow: {flowToDelete.Id}");
+            
+            // Delete the flow
+            Storage.DeleteFlow(flowToDelete.Id);
+            
+            Console.WriteLine($"✅ Flow deleted successfully: {flowToDelete.Id}");
+            
+            // Clear the modal
+            flowToDelete = null;
+            errorMessage = null;
+            
+            // Reload the flows list
+            LoadFlows();
+            
+            // Force UI update
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error deleting flow: {ex.Message}";
+            Console.WriteLine($"❌ Delete error: {ex.Message}");
+            Console.WriteLine($"❌ Stack trace: {ex.StackTrace}");
+        }
+        finally
+        {
+            isDeleting = false;
+        }
+    }
+}

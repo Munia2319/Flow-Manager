@@ -1,0 +1,239 @@
+{
+  "id": "advanced-code-review-flow",
+  "name": "Advanced Code Review System",
+  "description": "Parallel code analysis (Security, Style, Testing, Performance) \u2192 Aggregation \u2192 Scoring \u2192 Conditional approval \u2192 Notification",
+  "tenantId": "default",
+  "nodes": [
+    {
+      "id": "code_input",
+      "type": "Input",
+      "config": {
+        "text": "{{userInput}}"
+      },
+      "condition": null
+    },
+    {
+      "id": "security_analyzer",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.3,
+        "systemPrompt": "You are a security code reviewer. Analyze the code for security vulnerabilities: SQL injection, XSS, authentication issues, data exposure, etc. Return a JSON with: {\u0022score\u0022: 0-100, \u0022issues\u0022: [\u0022issue1\u0022, \u0022issue2\u0022], \u0022severity\u0022: \u0022low|medium|high|critical\u0022}"
+      },
+      "condition": null
+    },
+    {
+      "id": "style_analyzer",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.3,
+        "systemPrompt": "You are a code style reviewer. Check code quality: naming conventions, comments, structure, readability, best practices. Return JSON: {\u0022score\u0022: 0-100, \u0022issues\u0022: [\u0022issue1\u0022], \u0022suggestions\u0022: [\u0022suggestion1\u0022]}"
+      },
+      "condition": null
+    },
+    {
+      "id": "test_analyzer",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.3,
+        "systemPrompt": "You are a test coverage reviewer. Analyze test completeness: edge cases covered, happy paths, error handling, mocking. Return JSON: {\u0022score\u0022: 0-100, \u0022coverage\u0022: \u0022percentage\u0022, \u0022missing_tests\u0022: [\u0022scenario1\u0022]}"
+      },
+      "condition": null
+    },
+    {
+      "id": "performance_analyzer",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.3,
+        "systemPrompt": "You are a performance reviewer. Check for: unnecessary loops, inefficient algorithms, memory leaks, database query optimization. Return JSON: {\u0022score\u0022: 0-100, \u0022bottlenecks\u0022: [\u0022issue1\u0022], \u0022optimizations\u0022: [\u0022suggestion1\u0022]}"
+      },
+      "condition": null
+    },
+    {
+      "id": "aggregator",
+      "type": "Formatter",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "Combine all code review outputs. Structure: Security Analysis: {{security}}\n\nStyle Analysis: {{style}}\n\nTest Coverage: {{testing}}\n\nPerformance Analysis: {{performance}}\n\nProvide a clear summary of all findings."
+      },
+      "condition": null
+    },
+    {
+      "id": "score_calculator",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.1,
+        "systemPrompt": "Calculate final code review score. Weighting: Security 40%, Style 20%, Testing 25%, Performance 15%. Return ONLY a JSON: {\u0022final_score\u0022: 0-100, \u0022decision\u0022: \u0022approve|request_changes|reject\u0022, \u0022reasoning\u0022: \u0022explanation\u0022}"
+      },
+      "condition": null
+    },
+    {
+      "id": "approve_handler",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.5,
+        "systemPrompt": "Generate approval message. Be positive and congratulatory. Mention the excellent score and highlight key strengths. Format professionally."
+      },
+      "condition": null
+    },
+    {
+      "id": "changes_handler",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.5,
+        "systemPrompt": "Generate change request message. Be constructive and specific. List required improvements clearly. Acknowledge good parts. Format as actionable checklist."
+      },
+      "condition": null
+    },
+    {
+      "id": "reject_handler",
+      "type": "OpenAIChat",
+      "config": {
+        "apiKey": "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",
+        "model": "gpt-4o-mini",
+        "temperature": 0.5,
+        "systemPrompt": "Generate rejection message. Be professional but firm. Explain critical issues that require complete rework. Provide guidance on standards expected."
+      },
+      "condition": null
+    },
+    {
+      "id": "final_notifier",
+      "type": "Formatter",
+      "config": {
+        "apiKey": "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",
+        "systemPrompt": "Create final notification. Include: Review Summary, Final Score, Decision (Approved/Changes Requested/Rejected), and detailed feedback. Make it professional and clear."
+      },
+      "condition": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "code_input",
+      "to": "security_analyzer",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "code_input",
+      "to": "style_analyzer",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "code_input",
+      "to": "test_analyzer",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "code_input",
+      "to": "performance_analyzer",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "security_analyzer",
+      "to": "aggregator",
+      "fromOutput": "output",
+      "toInput": "security",
+      "condition": null
+    },
+    {
+      "from": "style_analyzer",
+      "to": "aggregator",
+      "fromOutput": "output",
+      "toInput": "style",
+      "condition": null
+    },
+    {
+      "from": "test_analyzer",
+      "to": "aggregator",
+      "fromOutput": "output",
+      "toInput": "testing",
+      "condition": null
+    },
+    {
+      "from": "performance_analyzer",
+      "to": "aggregator",
+      "fromOutput": "output",
+      "toInput": "performance",
+      "condition": null
+    },
+    {
+      "from": "aggregator",
+      "to": "score_calculator",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": null
+    },
+    {
+      "from": "score_calculator",
+      "to": "approve_handler",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": "{{score_calculator.decision}} == \u0027approve\u0027"
+    },
+    {
+      "from": "score_calculator",
+      "to": "changes_handler",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": "{{score_calculator.decision}} == \u0027request_changes\u0027"
+    },
+    {
+      "from": "score_calculator",
+      "to": "reject_handler",
+      "fromOutput": "output",
+      "toInput": "input",
+      "condition": "{{score_calculator.decision}} == \u0027reject\u0027"
+    },
+    {
+      "from": "approve_handler",
+      "to": "final_notifier",
+      "fromOutput": "output",
+      "toInput": "approval_message",
+      "condition": null
+    },
+    {
+      "from": "changes_handler",
+      "to": "final_notifier",
+      "fromOutput": "output",
+      "toInput": "changes_message",
+      "condition": null
+    },
+    {
+      "from": "reject_handler",
+      "to": "final_notifier",
+      "fromOutput": "output",
+      "toInput": "rejection_message",
+      "condition": null
+    },
+    {
+      "from": "score_calculator",
+      "to": "final_notifier",
+      "fromOutput": "output",
+      "toInput": "score_data",
+      "condition": null
+    }
+  ],
+  "createdAt": "2025-11-16T11:00:00Z",
+  "updatedAt": "2025-11-16T17:43:46.9149233Z",
+  "lastModified": "2025-11-16T17:43:46.9149246Z"
+}
