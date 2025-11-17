@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// ✨ NEW: Register Knowledge Base services first (before FlowOrchestrator)
+// Register Knowledge Base services first (before FlowOrchestrator)
 var kbBasePath = builder.Configuration["KnowledgeBase:BasePath"] ?? "Data/KnowledgeBase";
 var openAiApiKey = builder.Configuration["KnowledgeBase:OpenAIApiKey"] ?? "";
 var bingApiKey = builder.Configuration["KnowledgeBase:BingSearchApiKey"];
@@ -31,7 +31,7 @@ builder.Services.AddSingleton<IWebSearchService>(sp =>
     return new WebSearchService(bingApiKey);
 });
 
-// ✨ Register FlowStorageService with custom storage path
+//  Register FlowStorageService with custom storage path
 var flowBasePath = builder.Configuration["FlowStorage:BasePath"] ?? "Data/Flows";
 
 // Ensure the flow base path is absolute
@@ -53,7 +53,7 @@ builder.Services.AddSingleton<FlowManager.Core.Engine.FlowOrchestrator>(sp =>
     return new FlowManager.Core.Engine.FlowOrchestrator(kbService, webService);
 });
 
-// ✨ NEW: Register conversation storage service
+//  Register conversation storage service
 // Use FileBasedConversationStore for persistence (conversations survive app restarts)
 // To switch to in-memory storage (dev/testing), replace with:
 // builder.Services.AddSingleton<IConversationStore, InMemoryConversationStore>();
