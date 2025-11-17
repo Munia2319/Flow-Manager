@@ -1,4 +1,4 @@
-# 🚀 Advanced Flow Creation Guide
+# 🚀 Advanced Flow Creation Guide (Example)
 
 **Complete Guide to Building Complex AI Workflows with FlowManager**
 
